@@ -1,6 +1,6 @@
 <h1 align="center">clientside-search</h1>
 
-> "Why don't we have a decent client-side, in-browser search engine by now?" - Aron Homberg, 2023
+> "Why don't we have a decent, Lucene-like client-side (in-browser) search engine by now?"
 
 This library provides Lucene-like full-text search features for the browser and Node.js.
 
