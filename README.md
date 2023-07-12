@@ -90,7 +90,7 @@ const hydratedState = searchEngine.hydrateState()
 const hydratedEngine = SearchEngine.fromHydratedState(hydratedState, en)
 
 // equals: searchResult
-const searchResultFromHydated = searchEngine.search('Fence')
+const searchResultFromHydated = hydratedEngine.search('Fence')
 ```
 
 <h3 align="center">CommonJS</h3>
