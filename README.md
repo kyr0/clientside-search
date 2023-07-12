@@ -53,16 +53,51 @@ This search engine uses several advanced algorithms to provide robust and effici
 
 ```ts
 import { SearchEngine } from 'clientside-search'
+import en from 'clientside-search/en.esm'
 
-const result = await clientsidesearch({
-  foo: 'X',
+// create a new instance of a search engine
+const searchEngine = new SearchEngine(en)
+
+// add some text
+const docId1 = searchEngine.addDocument('The quick brown fox jumps over the lazy dog')
+
+// you can also add UTF8 text, and metadata
+const docId2 = searchEngine.addDocument('The quick brown fox jumps over the fence ✅', {
+  title: 'Fence',
+  date: new Date(),
+  author: 'John Doe',
 })
+
+/**
+ * {
+ *   id:
+ *   score: 1.34,
+ *   metadata: { title: 'Fence', date: '2023-07-12 ...', author: 'John Doe' }
+ * }
+ */
+const searchResult = searchEngine.search('Fence')
+
+// if you want to persist the index state,
+// hydratedState is a JSON string that you can persist
+const hydratedState = searchEngine.hydrateState()
+
+// PLEASE NOTE: The hydrated state does NOT contain the original input text
+// It contains an optimized representation of the search index
+// However, metadata is kept 1:1
+
+// you can re-hydrate from that state anywhere,
+// on the server or the client:
+const hydratedEngine = SearchEngine.fromHydratedState(hydratedState, en)
+
+// equals: searchResult
+const searchResultFromHydated = searchEngine.search('Fence')
 ```
 
 <h3 align="center">CommonJS</h3>
 
 ```ts
-const { clientsidesearch } = require('clientside-search')
+const { SearchEngine } = require('clientside-search')
+const { en } = require('clientside-search/en.cjs')
 
 // same API like ESM variant
 ```
