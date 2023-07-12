@@ -1,0 +1,281 @@
+[
+  {
+    "term": "information",
+    "text": "Information is an abstract concept that refers to that which has the power to inform. At the most fundamental level, information pertains to the interpretation of that which may be sensed, or their abstractions. Any natural process that is not completely random and any observable pattern in any medium can be said to convey some amount of information. Whereas digital signals and other data use discrete signs to convey information, other phenomena and artefacts such as analogue signals, poems, pictures, music or other sounds, and currents convey information in a more continuous form. Information is not knowledge itself, but the meaning that may be derived from a representation through interpretation.",
+    "metadata": {
+      "id": "Q11028",
+      "title": "Information",
+      "lang": "en"
+    }
+  },
+  {
+    "term": "data",
+    "text": "In common usage and statistics, data is a collection of discrete or continuous values that convey information, describing the quantity, quality, fact, statistics, other basic units of meaning, or simply sequences of symbols that may be further interpreted formally. A datum is an individual value in a collection of data. Data is usually organized into structures such as tables that provide additional context and meaning, and which may themselves be used as data in larger structures. Data may be used as variables in a computational process. Data may represent abstract ideas or concrete measurements.\nData is commonly used in scientific research, economics, and in virtually every other form of human organizational activity. Examples of data sets include price indices, unemployment rates, literacy rates, and census data. In this context, data represents the raw facts and figures which can be used in such a manner in order to capture the useful information out of it.",
+    "metadata": {
+      "id": "Q42848",
+      "title": "Data",
+      "lang": "en"
+    }
+  },
+  {
+    "term": "computer",
+    "text": "A computer is a machine that can be programmed to carry out sequences of arithmetic or logical operations (computation) automatically. Modern digital electronic computers can perform generic sets of operations known as programs. These programs enable computers to perform a wide range of tasks. A computer system is a nominally complete computer that includes the hardware, operating system, and peripheral equipment needed and used for full operation. This term may also refer to a group of computers that are linked and function together, such as a computer network or computer cluster.",
+    "metadata": {
+      "id": "Q68",
+      "title": "Computer",
+      "lang": "en"
+    }
+  },
+  {
+    "term": "technology",
+    "text": "Technology is the application of knowledge for achieving practical goals in a reproducible way. The word technology can also mean the products resulting from such efforts, including both tangible tools such as utensils or machines, and intangible ones such as software. Technology plays a critical role in science, engineering, and everyday life.",
+    "metadata": {
+      "id": "Q11016",
+      "title": "Technology",
+      "lang": "en"
+    }
+  },
+  {
+    "term": "somatology",
+    "text": "Biological anthropology, also known as physical anthropology, is a scientific discipline concerned with the biological and behavioral aspects of human beings, their extinct hominin ancestors, and related non-human primates, particularly from an evolutionary perspective. This subfield of anthropology systematically studies human beings from a biological perspective.",
+    "metadata": {
+      "id": "Q27172",
+      "title": "Biological anthropology",
+      "lang": "en"
+    }
+  },
+  {
+    "term": "sociology",
+    "text": "\n\nSociology is a social science that focuses on society, human social behavior, patterns of social relationships, social interaction, and aspects of culture associated with everyday life. In simple words sociology is the scientific study of society. It uses various methods of empirical investigation and critical analysis to develop a body of knowledge about social order and social change. While some sociologists conduct research that may be applied directly to social policy and welfare, others focus primarily on refining the theoretical understanding of social processes and phenomenological method. Subject matter can range from micro-level analyses of society to macro-level analyses.",
+    "metadata": {
+      "id": "Q21201",
+      "title": "Sociology",
+      "lang": "en"
+    }
+  },
+  {
+    "term": "psychology",
+    "text": "Psychology is the study of mind and behavior in humans and non-humans. Psychology includes the study of conscious and unconscious phenomena, including feelings and thoughts. It is an academic discipline of immense scope, crossing the boundaries between the natural and social sciences. Psychologists seek an understanding of the emergent properties of brains, linking the discipline to neuroscience. As social scientists, psychologists aim to understand the behavior of individuals and groups.",
+    "metadata": {
+      "id": "Q9418",
+      "title": "Psychology",
+      "lang": "en"
+    }
+  },
+  {
+    "term": "anatomy",
+    "text": "Anatomy is the branch of biology concerned with the study of the structure of organisms and their parts. Anatomy is a branch of natural science that deals with the structural organization of living things. It is an old science, having its beginnings in prehistoric times. Anatomy is inherently tied to developmental biology, embryology, comparative anatomy, evolutionary biology, and phylogeny, as these are the processes by which anatomy is generated, both over immediate and long-term timescales. Anatomy and physiology, which study the structure and function of organisms and their parts respectively, make a natural pair of related disciplines, and are often studied together. Human anatomy is one of the essential basic sciences that are applied in medicine.",
+    "metadata": {
+      "id": "Q514",
+      "title": "Anatomy",
+      "lang": "en"
+    }
+  },
+  {
+    "term": "physiology",
+    "text": "Physiology is the scientific study of functions and mechanisms in a living system. As a sub-discipline of biology, physiology focuses on how organisms, organ systems, individual organs, cells, and biomolecules carry out the chemical and physical functions in a living system. According to the classes of organisms, the field can be divided into medical physiology, animal physiology, plant physiology, cell physiology, and comparative physiology.",
+    "metadata": {
+      "id": "Q521",
+      "title": "Physiology",
+      "lang": "en"
+    }
+  },
+  {
+    "term": "medicine",
+    "text": "Medicine is the science and practice of caring for a patient, managing the diagnosis, prognosis, prevention, treatment, palliation of their injury or disease, and promoting their health. Medicine encompasses a variety of health care practices evolved to maintain and restore health by the prevention and treatment of illness. Contemporary medicine applies biomedical sciences, biomedical research, genetics, and medical technology to diagnose, treat, and prevent injury and disease, typically through pharmaceuticals or surgery, but also through therapies as diverse as psychotherapy, external splints and traction, medical devices, biologics, and ionizing radiation, amongst others.",
+    "metadata": {
+      "id": "Q11190",
+      "title": "Medicine",
+      "lang": "en"
+    }
+  },
+  {
+    "term": "health",
+    "text": "In common usage and medicine, health, according to the World Health Organization, is \"a state of complete physical, mental and social well-being and not merely the absence of disease and infirmity\". A variety of definitions have been used for different purposes over time. Health can be promoted by encouraging healthful activities, such as regular physical exercise and adequate sleep, and by reducing or avoiding unhealthful activities or situations, such as smoking or excessive stress. Some factors affecting health are due to individual choices, such as whether to engage in a high-risk behavior, while others are due to structural causes, such as whether the society is arranged in a way that makes it easier or harder for people to get necessary healthcare services. Still, other factors are beyond both individual and group choices, such as genetic disorders.",
+    "metadata": {
+      "id": "Q12147",
+      "title": "Health",
+      "lang": "en"
+    }
+  },
+  {
+    "term": "disease",
+    "text": "A disease is a particular abnormal condition that negatively affects the structure or function of all or part of an organism, and that is not immediately due to any external injury. Diseases are often known to be medical conditions that are associated with specific signs and symptoms. A disease may be caused by external factors such as pathogens or by internal dysfunctions. For example, internal dysfunctions of the immune system can produce a variety of different diseases, including various forms of immunodeficiency, hypersensitivity, allergies and autoimmune disorders.",
+    "metadata": {
+      "id": "Q12136",
+      "title": "Disease",
+      "lang": "en"
+    }
+  },
+  {
+    "term": "molecule",
+    "text": "A molecule is a group of two or more atoms held together by attractive forces known as chemical bonds; depending on context, the term may or may not include ions which satisfy this criterion. In quantum physics, organic chemistry, and biochemistry, the distinction from ions is dropped and molecule is often used when referring to polyatomic ions.",
+    "metadata": {
+      "id": "Q11369",
+      "title": "Molecule",
+      "lang": "en"
+    }
+  },
+  {
+    "term": "atom",
+    "text": "An atom is a particle that consists of a nucleus of protons and neutrons surrounded by a cloud of electrons. The atom is the basic particle of the chemical elements, and the chemical elements are distinguished from each other by the number of protons that are in their atoms. For example, any atom that contains 11 protons is sodium, and any atom that contains 29 protons is copper. The number of neutrons defines the isotope of the element.",
+    "metadata": {
+      "id": "Q9121",
+      "title": "Atom",
+      "lang": "en"
+    }
+  },
+  {
+    "term": "particle",
+    "text": "In the physical sciences, a particle is a small localized object which can be described by several physical or chemical properties, such as volume, density, or mass. They vary greatly in size or quantity, from subatomic particles like the electron, to microscopic particles like atoms and molecules, to macroscopic particles like powders and other granular materials. Particles can also be used to create scientific models of even larger objects depending on their density, such as humans moving in a crowd or celestial bodies in motion.",
+    "metadata": {
+      "id": "Q1621273",
+      "title": "Particle",
+      "lang": "en"
+    }
+  },
+  {
+    "term": "quantum",
+    "text": "In physics, a quantum is the minimum amount of any physical entity involved in an interaction. The fundamental notion that a physical property can be \"quantized\" is referred to as \"the hypothesis of quantization\". This means that the magnitude of the physical property can take on only discrete values consisting of integer multiples of one quantum.",
+    "metadata": {
+      "id": "Q46344",
+      "title": "Quantum",
+      "lang": "en"
+    }
+  },
+  {
+    "term": "physics",
+    "text": "Physics is the natural science of matter, involving the study of matter, its fundamental constituents, its motion and behavior through space and time, and the related entities of energy and force. Physics is one of the most fundamental scientific disciplines, with its main goal being to understand how the universe behaves. A scientist who specializes in the field of physics is called a physicist.",
+    "metadata": {
+      "id": "Q413",
+      "title": "Physics",
+      "lang": "en"
+    }
+  },
+  {
+    "term": "chemistry",
+    "text": "Chemistry is the scientific study of the properties and behavior of matter. It is a physical science under natural sciences that covers the elements that make up matter to the compounds made of atoms, molecules and ions: their composition, structure, properties, behavior and the changes they undergo during a reaction with other substances. Chemistry also addresses the nature of chemical bonds in chemical compounds.",
+    "metadata": {
+      "id": "Q2329",
+      "title": "Chemistry",
+      "lang": "en"
+    }
+  },
+  {
+    "term": "mathematics",
+    "text": "Mathematics is an area of knowledge that includes the topics of numbers, formulas and related structures, shapes and the spaces in which they are contained, and quantities and their changes. These topics are represented in modern mathematics with the major subdisciplines of number theory, algebra, geometry, and analysis, respectively. There is no general consensus among mathematicians about a common definition for their academic discipline.",
+    "metadata": {
+      "id": "Q395",
+      "title": "Mathematics",
+      "lang": "en"
+    }
+  },
+  {
+    "term": "logic",
+    "text": "Logic is the study of correct reasoning. It includes both formal and informal logic. Formal logic is the science of deductively valid inferences or logical truths. It studies how conclusions follow from premises independent of their topic and content. Informal logic is associated with informal fallacies, critical thinking, and argumentation theory. It examines arguments expressed in natural language while formal logic uses formal language. When used as a countable noun, the term \"a logic\" refers to a logical formal system that articulates a proof system. Logic plays a central role in many fields, such as philosophy, mathematics, computer science, and linguistics.",
+    "metadata": {
+      "id": "Q8078",
+      "title": "Logic",
+      "lang": "en"
+    }
+  },
+  {
+    "term": "language",
+    "text": "Language is a structured system of communication that consists of grammar and vocabulary. It is the primary means by which humans convey meaning, both in spoken and written forms, and may also be conveyed through sign languages. The vast majority of human languages have developed writing systems that allow for the recording and preservation of the sounds or signs of language. Human language is characterized by its cultural and historical diversity, with significant variations observed between cultures and across time. Human languages possess the properties of productivity and displacement, which enable the creation of an infinite number of sentences, and the ability to refer to objects, events, and ideas that are not immediately present in the discourse. The use of human language relies on social convention and is acquired through learning.",
+    "metadata": {
+      "id": "Q315",
+      "title": "Language",
+      "lang": "en"
+    }
+  },
+  {
+    "term": "philosophy",
+    "text": "Philosophy is the systematized study of general and fundamental questions, such as those concerning existence, reason, knowledge, values, mind, and language. Philosophical methods include questioning, critical discussion, rational argument, and systematic presentation.",
+    "metadata": {
+      "id": "Q5891",
+      "title": "Philosophy",
+      "lang": "en"
+    }
+  },
+  {
+    "term": "biology",
+    "text": "Biology is the scientific study of life. It is a natural science with a broad scope but has several unifying themes that tie it together as a single, coherent field. For instance, all organisms are made up of cells that process hereditary information encoded in genes, which can be transmitted to future generations. Another major theme is evolution, which explains the unity and diversity of life. Energy processing is also important to life as it allows organisms to move, grow, and reproduce. Finally, all organisms are able to regulate their own internal environments.",
+    "metadata": {
+      "id": "Q420",
+      "title": "Biology",
+      "lang": "en"
+    }
+  },
+  {
+    "term": "plant",
+    "text": "Plants are eukaryotes, predominantly photosynthetic, forming the kingdom Plantae. Many are multicellular. Historically, the plant kingdom encompassed all living things that were not animals, and included algae and fungi. All current definitions exclude the fungi and some of the algae. By one definition, plants form the clade Viridiplantae which consists of the green algae and the embryophytes or land plants. The latter include hornworts, liverworts, mosses, lycophytes, ferns, conifers and other gymnosperms, and flowering plants. A definition based on genomes includes the Viridiplantae, along with the red algae and the glaucophytes, in the clade Archaeplastida.",
+    "metadata": {
+      "id": "Q756",
+      "title": "Plant",
+      "lang": "en"
+    }
+  },
+  {
+    "term": "cell",
+    "text": "Cell most often refers to:Cell (biology), the functional basic unit of life",
+    "metadata": {
+      "id": "Q2349697",
+      "title": "Cell",
+      "lang": "en"
+    }
+  },
+  {
+    "term": "communication",
+    "text": "Communication is usually defined as the transmission of information. The term can also refer to the message itself, or the field of inquiry studying these transmissions, also known as communication studies. The precise definition of communication is disputed. Controversial issues are whether unintentional or failed transmissions are included and whether communication does not just transmit meaning but also create it. Models of communication aim to provide a simplified overview of its main components and their interaction. Many models include the idea that a source uses a coding system to express information in the form of a message. The source uses a channel to send the message to a receiver who has to decode it in order to understand its meaning. Channels are usually discussed in terms of the senses used to perceive the message, like hearing, sight, smell, touch, and taste.",
+    "metadata": {
+      "id": "Q11024",
+      "title": "Communication",
+      "lang": "en"
+    }
+  },
+  {
+    "term": "semiotics",
+    "text": "Semiotics is the systematic study of sign processes (semiosis) and meaning making. Semiosis is any activity, conduct, or process that involves signs, where a sign is defined as anything that communicates something, usually called a meaning, to the sign's interpreter. The meaning can be intentional, such as a word uttered with a specific meaning; or unintentional, such as a symptom being a sign of a particular medical condition. Signs can also communicate feelings and may communicate internally or through any of the senses: visual, auditory, tactile, olfactory, or gustatory (taste). Contemporary semiotics is a branch of science that studies meaning-making and various types of knowledge.",
+    "metadata": {
+      "id": "Q60195",
+      "title": "Semiotics",
+      "lang": "en"
+    }
+  },
+  {
+    "term": "statistics",
+    "text": "Statistics is the discipline that concerns the collection, organization, analysis, interpretation, and presentation of data. In applying statistics to a scientific, industrial, or social problem, it is conventional to begin with a statistical population or a statistical model to be studied. Populations can be diverse groups of people or objects such as \"all people living in a country\" or \"every atom composing a crystal\". Statistics deals with every aspect of data, including the planning of data collection in terms of the design of surveys and experiments.",
+    "metadata": {
+      "id": "Q12483",
+      "title": "Statistics",
+      "lang": "en"
+    }
+  },
+  {
+    "term": "calculus",
+    "text": "Calculus is the mathematical study of continuous change, in the same way that geometry is the study of shape, and algebra is the study of generalizations of arithmetic operations.",
+    "metadata": {
+      "id": "Q149972",
+      "title": "Calculus",
+      "lang": "en"
+    }
+  },
+  {
+    "term": "geometry",
+    "text": "Geometry is a branch of mathematics concerned with properties of space such as the distance, shape, size, and relative position of figures. Geometry is, along with arithmetic, one of the oldest branches of mathematics. A mathematician who works in the field of geometry is called a geometer. Until the 19th century, geometry was almost exclusively devoted to Euclidean geometry, which includes the notions of point, line, plane, distance, angle, surface, and curve, as fundamental concepts.",
+    "metadata": {
+      "id": "Q8087",
+      "title": "Geometry",
+      "lang": "en"
+    }
+  },
+  {
+    "term": "cybernetics",
+    "text": "Cybernetics is a wide-ranging field concerned with circular causal processes such as feedback. Norbert Wiener named the field after an example of circular causal feedback—that of steering a ship where the helmsman adjusts their steering in response to the effect it is observed as having, enabling a steady course to be maintained amongst disturbances such as cross-winds or the tide.",
+    "metadata": {
+      "id": "Q123637",
+      "title": "Cybernetics",
+      "lang": "en"
+    }
+  }
+]

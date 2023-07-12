@@ -1,0 +1,18 @@
+## Please check .eslintignore and .gitignore when changing this file
+dist
+node_modules
+
+## file extensions
+*.*
+!*.css
+!*.js
+!*.mjs
+!*.jsx
+!*.ts
+!*.tsx
+!*.json
+!*.yml
+!*.yaml
+!*.md
+!*.mdx
+

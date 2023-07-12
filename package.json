@@ -1,0 +1,72 @@
+{
+  "name": "clientside-search",
+  "version": "1.0.0",
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "description": "A highly efficient, full-featured, multilingual text search engine library, providing full-text search, fuzzy matching, document indexing and more, with state hydration/dehydration functionality for easy persistence.",
+  "keywords": [
+    "search-engine",
+    "full-text-search",
+    "text-processing",
+    "document-indexing",
+    "fuzzy-matching",
+    "multilingual",
+    "BM25",
+    "TF-IDF",
+    "BK-Tree",
+    "state-hydration",
+    "state-dehydration",
+    "Damerau-Levenshtein-distance",
+    "document-search",
+    "natural-language-processing",
+    "text-analytics",
+    "text-search",
+    "information-retrieval"
+  ],
+  "repository": {
+    "url": "git+https://github.com/kyr0/clientside-search.git",
+    "type": "git"
+  },
+  "scripts": {
+    "pretest": "yarn build --dev",
+    "test": "NODE_OPTIONS='--experimental-vm-modules --enable-source-maps --no-warnings' jest --verbose --coverage ./test/*.test.ts ./test/**/*.test.ts",
+    "clean": "rm -rf ./dist && rm -rf ./coverage",
+    "prebuild": "yarn clean",
+    "build": "yarn node --enable-source-maps ./build.mjs",
+    "lint": "prettier --check .",
+    "lint:fix": "prettier --write .",
+    "precli": "yarn build",
+    "cli": "yarn node --enable-source-maps ./dist/cli.esm.js clientsidesearch --foo X",
+    "gen-testdata": "yarn node --enable-source-maps ./genTestData.mjs"
+  },
+  "author": "Aron Homberg <info@aron-homberg.de>",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs.js",
+      "import": "./dist/index.esm.js"
+    }
+  },
+  "module": "./dist/index.esm.js",
+  "main": "./dist/index.cjs.js",
+  "types": "./dist/index.esm.d.ts",
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "@jsheaven/easybuild": "^1.2.9",
+    "@types/jest": "^29.5.3",
+    "gzip-size": "^7.0.0",
+    "husky": "^8.0.3",
+    "jest": "^29.6.1",
+    "jest-environment-jsdom": "^29.6.1",
+    "prettier": "^2.8.8",
+    "pretty-bytes": "^6.1.0",
+    "ts-jest": "^29.0.0-next.1",
+    "typescript": "^4.9.5",
+    "wikipedia-tldr": "^2.0.1"
+  }
+}
