@@ -4,7 +4,7 @@
 
 This library provides Lucene-like full-text search features for the browser and Node.js.
 
-This search engine uses several advanced algorithms to provide robust and efficient searching over a large collection of documents. The algorithms used include TF-IDF for weighing and ranking, BK-Tree for fuzzy matching, BM25 for relevance scoring, and Damerau-Levenshtein distance for measuring the edit distance between search terms. The search engine supports multiple languages and uses stemming and stopword removal to enhance its efficiency. It also supports the storage and retrieval of metadata associated with the documents. You can generate an index from a text corpus and metadata both on client- and server-side. You can hydrate and re-hydrate (reuse a pre-generated) index on both client- and server-side.
+This search engine uses several advanced algorithms to provide robust and efficient searching over a large collection of documents. The algorithms used include TF-IDF for weighing and ranking, BK-Tree for fuzzy matching, BM25 for relevance scoring, and Damerau-Levenshtein distance for measuring the edit distance between search terms. The search engine supports multiple languages and uses stemming and stopword removal to enhance its efficiency. It also supports the storage and retrieval of metadata associated with the documents. You can generate an index from a text corpus and metadata both on client- and server-side. You can hydrate and re-hydrate (reuse a pre-generated) the index on both client- and server-side.
 
 <h2 align="center">Developers' User Stories</h2>
 
