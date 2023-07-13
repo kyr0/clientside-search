@@ -6,7 +6,7 @@ This library provides Lucene-like full-text search features for the browser and 
 
 This search engine uses several advanced algorithms to provide robust and efficient searching over a large collection of documents. The algorithms used include TF-IDF for weighing and ranking, BK-Tree for fuzzy matching, BM25 for relevance scoring, and Damerau-Levenshtein distance for measuring the edit distance between search terms. The search engine supports multiple languages and uses stemming and stopword removal to enhance its efficiency. It also supports the storage and retrieval of metadata associated with the documents. You can generate an index from a text corpus and metadata both on client- and server-side. You can hydrate and re-hydrate (reuse a pre-generated) index on both client- and server-side.
 
-<h2 align="center">User Stories</h2>
+<h2 align="center">Developers' User Stories</h2>
 
 1. I want to use a Lucene-like index that uses TF-IDF vectorization, BM25 and BKTree ranking as well as stemming and stopwords on client side.
 
@@ -16,7 +16,9 @@ This search engine uses several advanced algorithms to provide robust and effici
 
 4. The search engine should be able to retreive and search in metadata that may be associated with each document.
 
-5. The search engine should be able to remove/update it's index.
+5. The search engine should be able to remove/update it's index' documents.
+
+6. State shall be hydratable.
 
 <h2 align="center">Features</h2>
 
