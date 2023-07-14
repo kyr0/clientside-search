@@ -1,5 +1,6 @@
 import { BKTree } from './bktree'
 import { BM25 } from './bm25'
+import { getPhoneticWeight } from './phonetic/phonetic'
 import { TfidfVectorizer } from './tfidf'
 
 export interface Document {
@@ -8,9 +9,18 @@ export interface Document {
 }
 
 export interface LanguageSupport {
+  iso2Language: Iso2LanguageKey
   stem: (word: string) => string
   stopwords: string[]
 }
+
+export type Iso2LanguageKey = string
+
+export interface LanguageStopwords {
+  [key: Iso2LanguageKey]: Array<string>
+}
+
+export const DEFAULT_LANGUAGE: Iso2LanguageKey = 'en'
 
 export type Language = 'en' | 'de'
 
@@ -33,7 +43,7 @@ export class SearchEngine {
     this.language = language
     this.stopWords = new Set(language.stopwords)
     this.vectorizer = new TfidfVectorizer(ngramRange)
-    this.bkTree = new BKTree(this.damerauLevenshteinDistance)
+    this.bkTree = new BKTree()
     this.docMetadata = {}
   }
 
@@ -43,7 +53,7 @@ export class SearchEngine {
     searchEngine.index = jsonData.index
     searchEngine.bm25 = BM25.fromJSON(jsonData.bm25)
     searchEngine.vectorizer = new TfidfVectorizer(jsonData.ngramRange)
-    searchEngine.bkTree = BKTree.fromJSON(jsonData.bkTree, searchEngine.damerauLevenshteinDistance)
+    searchEngine.bkTree = BKTree.fromJSON(jsonData.bkTree)
     searchEngine.docMetadata = jsonData.docMetadata
     return searchEngine
   }
@@ -86,9 +96,12 @@ export class SearchEngine {
     const words = this.processText(text)
 
     // include meta data in the index
-    if (metadata.title) {
-      const titleWords = this.processText(metadata.title)
-      words.push(...titleWords)
+    for (const key in metadata) {
+      if (typeof metadata[key] !== 'string' || !key.startsWith('index_')) {
+        continue
+      }
+      const metaWords = this.processText(metadata[key])
+      words.push(...metaWords)
     }
 
     this.bm25.addDocument(words, docId)
@@ -117,10 +130,10 @@ export class SearchEngine {
     const bm25ScoresCache: Record<string, any> = {}
 
     terms.forEach((term) => {
-      // Use BKTree to find similar words
+      // use BKTree to find similar words
       const similarWords = this.getSimilarWords(term)
-      similarWords.forEach((similarWord) => {
-        const docIds = this.index[similarWord] || {}
+      similarWords.forEach((similarWord, index) => {
+        const docIds = this.index[similarWord.word] || {}
         Object.keys(docIds).forEach((docId) => {
           seenDocIds.add(docId)
 
@@ -129,18 +142,24 @@ export class SearchEngine {
             bm25ScoresCache[term] = this.bm25.getScores([term])
           }
 
-          // If the word from BKTree is the same as the term, it's an exact match
-          if (similarWord === term) {
+          // if the word from BKTree is the same as the term, it's an exact match
+          if (similarWord.word === term) {
             if (!exactScores[docId]) {
               exactScores[docId] = 0
             }
             exactScores[docId] += 0.25 + bm25ScoresCache[term][docId]
           } else {
-            // Else, it's a fuzzy match
+            // else, it's a fuzzy match
             if (!fuzzyScores[docId]) {
               fuzzyScores[docId] = 0
             }
+
             fuzzyScores[docId] += 0.125 + bm25ScoresCache[term][docId]
+
+            // if the previous similar word has the same distance, use phonetics to weighten
+            if (similarWords[index - 1] && similarWords[index - 1].distance === similarWord.distance) {
+              fuzzyScores[docId] *= getPhoneticWeight(term, similarWord.word, this.language.iso2Language)
+            }
           }
         })
       })
@@ -155,7 +174,7 @@ export class SearchEngine {
         const titleWords = this.processText(this.docMetadata[docId].title)
         terms.forEach((term) => {
           if (titleWords.includes(term)) {
-            acc[docId] *= 1.5 // increase score by 50%
+            acc[docId] *= 2 // increase score by 100%
           }
         })
       }
@@ -163,10 +182,9 @@ export class SearchEngine {
       return acc
     }, {})
 
-    // Sort the documents by scores in descending order
+    // sort the documents by scores in descending order
     const docIds = Object.keys(scores).sort((a, b) => scores[b] - scores[a])
 
-    // Return both the docId and metadata for each result
     return docIds.map((docId) => ({
       id: parseInt(docId, 10),
       metadata: this.docMetadata[docId],
@@ -174,10 +192,16 @@ export class SearchEngine {
     }))
   }
 
-  getSimilarWords(word: string, maxDistance: number = 2): string[] {
+  getSimilarWords(
+    word: string,
+    maxDistance: number = 2,
+  ): Array<{
+    word: string
+    distance: number
+  }> {
     const similarWords = this.bkTree.search(word, maxDistance)
-    // Sort the similar words by their distance and map to an array of words
-    return similarWords.sort((a, b) => a.distance - b.distance).map((similarWord) => similarWord.word)
+    // sort the similar words by their distance and map to an array of words
+    return similarWords.sort((a, b) => a.distance - b.distance).map((similarWord) => similarWord)
   }
 
   generateId(text: string) {
@@ -192,14 +216,14 @@ export class SearchEngine {
 
   removeDocument(docId: number) {
     if (this.docToWords[docId]) {
-      // Remove each word in the document from the index
+      // remove each word in the document from the index
       for (const word of this.docToWords[docId]) {
         delete this.index[word][docId]
-        // If there are no more documents for this word, remove the word from the index
+        // if there are no more documents for this word, remove the word from the index
         if (Object.keys(this.index[word]).length === 0) {
           delete this.index[word]
-          // Remove the word from the BK-Tree
-          // Please note that this operation can be costly
+          // remove the word from the BK-Tree
+          // please note that this operation can be costly
           this.bkTree.remove(word)
         }
       }
@@ -210,30 +234,30 @@ export class SearchEngine {
     delete this.documents[docId]
     delete this.docToWords[docId]
   }
+}
 
-  damerauLevenshteinDistance(s1: string, s2: string) {
-    const dp: number[][] = Array(s1.length + 1)
-      .fill(null)
-      .map(() => Array(s2.length + 1).fill(0))
-    for (let i = 0; i <= s1.length; i++) {
-      dp[i][0] = i
-    }
-    for (let i = 0; i <= s2.length; i++) {
-      dp[0][i] = i
-    }
-    for (let i = 1; i <= s1.length; i++) {
-      for (let j = 1; j <= s2.length; j++) {
-        const cost = s1[i - 1] == s2[j - 1] ? 0 : 1
-        dp[i][j] = Math.min(
-          dp[i - 1][j] + 1, // deletion
-          dp[i][j - 1] + 1, // insertion
-          dp[i - 1][j - 1] + cost, // substitution
-        )
-        if (i > 1 && j > 1 && s1[i - 1] == s2[j - 2] && s1[i - 2] == s2[j - 1]) {
-          dp[i][j] = Math.min(dp[i][j], dp[i - 2][j - 2] + cost) // transposition
-        }
+export const damerauLevenshteinDistance = (s1: string, s2: string) => {
+  const dp: number[][] = Array(s1.length + 1)
+    .fill(null)
+    .map(() => Array(s2.length + 1).fill(0))
+  for (let i = 0; i <= s1.length; i++) {
+    dp[i][0] = i
+  }
+  for (let i = 0; i <= s2.length; i++) {
+    dp[0][i] = i
+  }
+  for (let i = 1; i <= s1.length; i++) {
+    for (let j = 1; j <= s2.length; j++) {
+      const cost = s1[i - 1] == s2[j - 1] ? 0 : 1
+      dp[i][j] = Math.min(
+        dp[i - 1][j] + 1, // deletion
+        dp[i][j - 1] + 1, // insertion
+        dp[i - 1][j - 1] + cost, // substitution
+      )
+      if (i > 1 && j > 1 && s1[i - 1] == s2[j - 2] && s1[i - 2] == s2[j - 1]) {
+        dp[i][j] = Math.min(dp[i][j], dp[i - 2][j - 2] + cost) // transposition
       }
     }
-    return dp[s1.length][s2.length]
   }
+  return dp[s1.length][s2.length]
 }

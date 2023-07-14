@@ -1,3 +1,5 @@
+import { damerauLevenshteinDistance } from './engine'
+
 export class BKTreeNode {
   word: string
   children: Map<number, BKTreeNode>
@@ -19,8 +21,11 @@ export class BKTreeNode {
 
   static fromJSON(json: any) {
     const node = new BKTreeNode(json.word, json.count)
-    json.children.forEach(([key, child]: [number, any]) => {
-      node.children.set(key, BKTreeNode.fromJSON(child))
+    json.children.forEach((value: [number, any]) => {
+      if (Array.isArray(value) && value.length === 2) {
+        const [key, child]: [number, any] = value
+        node.children.set(key, BKTreeNode.fromJSON(child))
+      }
     })
     return node
   }
@@ -28,11 +33,9 @@ export class BKTreeNode {
 
 export class BKTree {
   root: BKTreeNode | null
-  damerauLevenshteinDistance: (s1: string, s2: string) => number
 
-  constructor(damerauLevenshteinDistance: (s1: string, s2: string) => number) {
+  constructor() {
     this.root = null
-    this.damerauLevenshteinDistance = damerauLevenshteinDistance
   }
 
   toJSON() {
@@ -41,8 +44,8 @@ export class BKTree {
     }
   }
 
-  static fromJSON(json: any, damerauLevenshteinDistance: (s1: string, s2: string) => number) {
-    const tree = new BKTree(damerauLevenshteinDistance)
+  static fromJSON(json: any) {
+    const tree = new BKTree()
     tree.root = json.root ? BKTreeNode.fromJSON(json.root) : null
     return tree
   }
@@ -56,7 +59,7 @@ export class BKTree {
   }
 
   _insert(word: string, node: BKTreeNode) {
-    const distance = this.damerauLevenshteinDistance(word, node.word)
+    const distance = damerauLevenshteinDistance(word, node.word)
     if (distance === 0) {
       node.count++ // Increment count for the existing word
     } else if (!node.children.has(distance)) {
@@ -72,7 +75,7 @@ export class BKTree {
   }
 
   _remove(word: string, node: BKTreeNode): BKTreeNode | null {
-    const distance = this.damerauLevenshteinDistance(word, node.word)
+    const distance = damerauLevenshteinDistance(word, node.word)
     if (distance === 0) {
       // Found the word
       node.count--
@@ -114,7 +117,7 @@ export class BKTree {
   }
 
   _search(word: string, maxDistance: number, node: BKTreeNode, result: { word: string; distance: number }[]) {
-    const distance = this.damerauLevenshteinDistance(word, node.word)
+    const distance = damerauLevenshteinDistance(word, node.word)
     if (distance <= maxDistance) {
       result.push({ word: node.word, distance })
     }

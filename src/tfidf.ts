@@ -1,5 +1,5 @@
 export class TfidfVectorizer {
-  documents: Record<string, string[]>
+  documents: Record<number, string[]>
   ngramRange: [number, number]
 
   constructor(ngramRange: [number, number] = [1, 1]) {
@@ -13,6 +13,9 @@ export class TfidfVectorizer {
   }
 
   removeDocument(docId: number) {
+    if (!this.documents.hasOwnProperty(docId)) {
+      throw new Error(`Document ${docId} does not exist`)
+    }
     delete this.documents[docId]
   }
 
@@ -33,7 +36,7 @@ export class TfidfVectorizer {
         count++
       }
     }
-    return 1 + Math.log(count) // sublinear tf scaling
+    return count > 0 ? 1 + Math.log(count) : 0
   }
 
   numDocsContaining(term: string) {
@@ -47,7 +50,9 @@ export class TfidfVectorizer {
   }
 
   idf(term: string) {
-    return Math.log(Object.keys(this.documents).length / (1 + this.numDocsContaining(term)))
+    const numDocs = Object.keys(this.documents).length
+    if (numDocs === 0) throw new Error('No documents exist')
+    return Math.log(numDocs / (1 + this.numDocsContaining(term)))
   }
 
   tfidf(term: string, document: string[]) {

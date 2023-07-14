@@ -12,9 +12,11 @@ describe('SearchEngine', () => {
   beforeEach(() => {
     searchEngine = new SearchEngine(language) // use default stopwords and ngramRange
     searchEngine.addDocument('Der schnelle braune Fuchs springt über den faulen Hund.', {
+      id: 'faul',
       debugStemmed: searchEngine.processText('Der schnelle braune Fuchs springt über den faulen Hund.').join(' '),
     })
     searchEngine.addDocument('Der schnelle braune Fuchs springt über den Zaun. ✅', {
+      id: 'zaun',
       debugStemmed: searchEngine.processText('Der schnelle braune Fuchs springt über den Zaun. ✅').join(' '),
     })
   })
@@ -33,6 +35,17 @@ describe('SearchEngine', () => {
 
     expect(processedText).toEqual(expectedText)
   })
+
+  test('should match with phonetics when levensthein distance is similar', () => {
+    // possible matches for 'zaul' with levensthein distance 1
+    // faul
+    // zaun
+    // both distances are 1, but 'zaun' should be the better match as it has the same phonetics
+    // therefore koeln phonetics should be used as a tie breaker
+    const res = searchEngine.search('zaul')
+    expect(res[0].metadata.id).toEqual('zaun')
+  })
+
   test('should add a document correctly', () => {
     const doc = 'Dies ist ein Test-Dokument.'
     const docId = searchEngine.addDocument(doc)
@@ -97,7 +110,7 @@ describe('SearchEngine', () => {
       /** e.g.: article == {
         term: 'information',
         text: 'Information is an abstract concept that refers to that which has the power to inform. At the most fundamental level, information pertains to the interpretation of that which may be sensed, or their abstractions. Any natural process that is not completely random and any observable pattern in any medium can be said to convey some amount of information. Whereas digital signals and other data use discrete signs to convey information, other phenomena and artefacts such as analogue signals, poems, pictures, music or other sounds, and currents convey information in a more continuous form. Information is not knowledge itself, but the meaning that may be derived from a representation through interpretation.',
-        metadata: { id: 'Q11028', title: 'Information', lang: 'en' }
+        metadata: { id: 'Q11028', index_title: 'Information', lang: 'en' }
       }, */
       searchEngine.addDocument(article.text, article.metadata)
     })
@@ -112,14 +125,14 @@ describe('SearchEngine', () => {
   })
 
   test('should properly boost scores for documents with query terms in the title', () => {
-    const searchEngine = new SearchEngine({ stopwords: [], stem: (word: string) => word }, [1, 1])
-    searchEngine.addDocument('Test Dokument', { title: 'Test Titel' })
-    searchEngine.addDocument('Noch ein Test-Dokument', { title: 'Irrelevanter Titel' })
+    const searchEngine = new SearchEngine({ iso2Language: 'de', stopwords: [], stem: (word: string) => word }, [1, 1])
+    searchEngine.addDocument('Test Dokument', { index_title: 'Test Titel' })
+    searchEngine.addDocument('Noch ein Test-Dokument', { index_title: 'Irrelevanter Titel' })
 
     const scores = searchEngine.search('test')
 
     expect(scores[0].score).toBeGreaterThanOrEqual(scores[1].score)
-    expect(scores[0].metadata.title).toBe('Test Titel')
-    expect(scores[1].metadata.title).toBe('Irrelevanter Titel')
+    expect(scores[0].metadata.index_title).toBe('Test Titel')
+    expect(scores[1].metadata.index_title).toBe('Irrelevanter Titel')
   })
 })

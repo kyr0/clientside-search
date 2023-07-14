@@ -23,7 +23,7 @@ This search engine uses several advanced algorithms to provide robust and effici
 <h2 align="center">Features</h2>
 
 - ✅ _Full-Text Search_: Provides the ability to perform a comprehensive text-based search over a large collection of documents.
-- ✅ _Multilingual Support_: Supports multiple languages for indexing and searching documents.
+- ✅ _Multilingual Support_: Supports multiple languages for indexing and searching documents and automatic language detection for input text.
 - ✅ _Text Processing_: Includes text transformation operations like converting to lower case, splitting by words, stemming, and stopword removal.
 - ✅ _Document Indexing_: Allows adding of documents to the index along with metadata to make them searchable.
   Document Removal: Provides functionality to remove a specific document from the index based on its ID.
@@ -32,7 +32,8 @@ This search engine uses several advanced algorithms to provide robust and effici
 - ✅ _Fuzzy Matching with BK-Tree_: Uses a BK-Tree structure to perform fuzzy matching, i.e., to find words in the index that are similar to the search terms.
 - ✅ _Term Frequency-Inverse Document Frequency (TF-IDF) Weighting_: Uses TF-IDF to weight and rank the indexed words based on their importance in the document and rarity in the overall document set.
 - ✅ _State Hydration and Dehydration_: Provides functionality to save (dehydrate) the state of the search engine to a compressed format, or to restore (hydrate) it from a previously saved state either locally or remotely.
-  D- ✅ _Damerau-Levenshtein Distance Calculation_: Includes a function to calculate the Damerau-Levenshtein distance, i.e., the minimum number of operations (insertions, deletions, substitutions, transposition) required to change one word into another.
+- ✅ _Damerau-Levenshtein Distance Calculation_: Includes a function to calculate the Damerau-Levenshtein distance, i.e., the minimum number of operations (insertions, deletions, substitutions, transposition) required to change one word into another.
+- ✅ _Phonetic Scoring_: Uses language-specific phonetic algorithms such as Double Metaphone and Koelner Phonetik as a tie breaker when Damerau-Levenshtein Distance is equal for two matches.
 - ✅ _Document ID Generation_: Generates a unique ID for each document based on its text.
 - ✅ _Automatic Stop Word selection_: Selects the best default stop words per language supported.
 - ✅ Currently supports only: `en`, `de`
@@ -65,7 +66,8 @@ const docId1 = searchEngine.addDocument('The quick brown fox jumps over the lazy
 
 // you can also add UTF8 text, and metadata
 const docId2 = searchEngine.addDocument('The quick brown fox jumps over the fence ✅', {
-  title: 'Fence',
+  // metadata with index_ prefix will be indexed for search
+  index_title: 'Fence',
   date: new Date(),
   author: 'John Doe',
 })

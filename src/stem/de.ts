@@ -1,3 +1,9 @@
+import { German2Stemmer } from './de_german'
+
+const german2Stemmer = new German2Stemmer()
+export const stem_de = (word: string): string => german2Stemmer.stem(word)
+
+/*
 export const stem_de = (word: string): string => {
   word = word.replace(/([aeiouyäöü])u([aeiouyäöü])/g, '$1U$2')
   word = word.replace(/([aeiouyäöü])y([aeiouyäöü])/g, '$1Y$2')
@@ -142,3 +148,4 @@ export const stem_de = (word: string): string => {
 
   return word
 }
+*/

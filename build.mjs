@@ -26,3 +26,12 @@ await buildForNode({
     logLevel: 'error',
   },
 })
+
+await buildForNode({
+  entryPoint: './src/language/detect.ts',
+  outfile: './dist/language-detect.js',
+  debug: process.argv.indexOf('--dev') > -1,
+  esBuildOptions: {
+    logLevel: 'error',
+  },
+})

@@ -11,8 +11,12 @@ describe('SearchEngine', () => {
 
   beforeEach(() => {
     searchEngine = new SearchEngine(language) // use default stopwords and ngramRange
-    searchEngine.addDocument('The quick brown fox jumps over the lazy dog')
-    searchEngine.addDocument('The quick brown fox jumps over the fence ✅')
+    searchEngine.addDocument('The quick brown fox jumps over the lazy dog', {
+      id: 'lazy',
+    })
+    searchEngine.addDocument('The quick brown fox jumps over the fence ✅', {
+      id: 'fence',
+    })
   })
 
   test('should create a new instance correctly', () => {
@@ -85,7 +89,7 @@ describe('SearchEngine', () => {
       /** e.g.: article == {
         term: 'information',
         text: 'Information is an abstract concept that refers to that which has the power to inform. At the most fundamental level, information pertains to the interpretation of that which may be sensed, or their abstractions. Any natural process that is not completely random and any observable pattern in any medium can be said to convey some amount of information. Whereas digital signals and other data use discrete signs to convey information, other phenomena and artefacts such as analogue signals, poems, pictures, music or other sounds, and currents convey information in a more continuous form. Information is not knowledge itself, but the meaning that may be derived from a representation through interpretation.',
-        metadata: { id: 'Q11028', title: 'Information', lang: 'en' }
+        metadata: { id: 'Q11028', index_title: 'Information', lang: 'en' }
       }, */
       searchEngine.addDocument(article.text, article.metadata)
     })
@@ -99,15 +103,23 @@ describe('SearchEngine', () => {
     expect(result2[0].metadata.title).toBe('Communication')
   })
 
+  test('should match with phonetics when levensthein distance is similar', () => {
+    const res = searchEngine.search('fenc')
+    expect(res[0].metadata.id).toEqual('fence')
+
+    const res2 = searchEngine.search('phence')
+    expect(res2[0].metadata.id).toEqual('fence')
+  })
+
   test('should properly boost scores for documents with query terms in the title', () => {
-    const searchEngine = new SearchEngine({ stopwords: [], stem: (word: string) => word }, [1, 1])
-    searchEngine.addDocument('test document', { title: 'test title' })
-    searchEngine.addDocument('another test document', { title: 'irrelevant title' })
+    const searchEngine = new SearchEngine({ iso2Language: 'en', stopwords: [], stem: (word: string) => word }, [1, 1])
+    searchEngine.addDocument('test document', { index_title: 'test title' })
+    searchEngine.addDocument('another test document', { index_title: 'irrelevant title' })
 
     const scores = searchEngine.search('test')
 
     expect(scores[0].score).toBeGreaterThanOrEqual(scores[1].score)
-    expect(scores[0].metadata.title).toBe('test title')
-    expect(scores[1].metadata.title).toBe('irrelevant title')
+    expect(scores[0].metadata.index_title).toBe('test title')
+    expect(scores[1].metadata.index_title).toBe('irrelevant title')
   })
 })

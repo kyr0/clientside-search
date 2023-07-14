@@ -24,7 +24,8 @@
     "natural-language-processing",
     "text-analytics",
     "text-search",
-    "information-retrieval"
+    "information-retrieval",
+    "language-detection"
   ],
   "repository": {
     "url": "git+https://github.com/kyr0/clientside-search.git",

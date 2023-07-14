@@ -1,14 +1,10 @@
 import { BKTree } from '../dist/index.esm'
 
-// Simple function for Damerau–Levenshtein distance.
-// Replace with an actual implementation for real use.
-const damerauLevenshteinDistance = (s1: string, s2: string) => Math.abs(s1.length - s2.length)
-
 describe('BKTree and BKTreeNode', () => {
   let tree: BKTree
 
   beforeEach(() => {
-    tree = new BKTree(damerauLevenshteinDistance)
+    tree = new BKTree()
   })
 
   it('should correctly insert and search words', () => {
@@ -18,16 +14,19 @@ describe('BKTree and BKTreeNode', () => {
     tree.insert('roast')
     tree.insert('post')
 
-    let result = tree.search('test', 1)
+    let result = tree.search('test', 2)
+
     expect(result).toEqual([
-      { distance: 0, word: 'test' },
-      { distance: 1, word: 'toast' },
+      { word: 'test', distance: 0 },
+      { word: 'toast', distance: 2 },
+      { word: 'post', distance: 2 },
     ])
 
     result = tree.search('toast', 1)
+
     expect(result).toEqual([
-      { distance: 1, word: 'test' },
-      { distance: 0, word: 'toast' },
+      { word: 'toast', distance: 0 },
+      { word: 'roast', distance: 1 },
     ])
   })
 
@@ -38,14 +37,22 @@ describe('BKTree and BKTreeNode', () => {
     tree.insert('roast')
     tree.insert('post')
 
-    tree.remove('toast')
+    tree.remove('toast') // only removed one instance of 'toast'
 
     let result = tree.search('toast', 1)
+
     expect(result).toHaveLength(2)
     expect(result).toEqual([
-      { distance: 1, word: 'test' },
-      { distance: 0, word: 'toast' },
+      { word: 'toast', distance: 0 },
+      { word: 'roast', distance: 1 },
     ])
+
+    tree.remove('toast') // removed second instance of 'toast'
+
+    let result2 = tree.search('toast', 1)
+
+    expect(result2).toHaveLength(1)
+    expect(result2).toEqual([{ distance: 1, word: 'roast' }]) // gone
   })
 
   it('should correctly serialize to JSON and restore from JSON', () => {
@@ -55,18 +62,15 @@ describe('BKTree and BKTreeNode', () => {
     tree.insert('post')
 
     const json = tree.toJSON()
-    const restoredTree = BKTree.fromJSON(json, damerauLevenshteinDistance)
-
+    const restoredTree = BKTree.fromJSON(json)
     let result = restoredTree.search('test', 1)
-    expect(result).toEqual([
-      { distance: 0, word: 'test' },
-      { distance: 1, word: 'toast' },
-    ])
+
+    expect(result).toEqual([{ distance: 0, word: 'test' }])
 
     result = restoredTree.search('toast', 1)
     expect(result).toEqual([
-      { distance: 1, word: 'test' },
       { distance: 0, word: 'toast' },
+      { distance: 1, word: 'roast' },
     ])
   })
 })
