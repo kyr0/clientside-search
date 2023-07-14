@@ -39,7 +39,7 @@ This search engine uses several advanced algorithms to provide robust and effici
 - ✅ Currently supports only: `en`, `de`
 - ✅ Supports UTF8
 - ✅ Available as a simple API
-- ✅ Just `3.78 KiB` nano sized (ESM, gizpped)
+- ✅ Just `4.73 KiB` nano sized (ESM, gizpped, base library)
 - ✅ Zero dependencies!
 - ✅ Tree-shakable and side-effect free
 - ✅ First class TypeScript support
