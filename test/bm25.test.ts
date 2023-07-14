@@ -46,7 +46,7 @@ describe('BM25', () => {
     const document = ['hello', 'world']
     bm25.addDocument(document, 1)
 
-    const score = bm25.score(['nonexistent'], 1)
+    const score = bm25.score(['nonexistent'], document, 1)
     expect(score).toEqual(0)
   })
 
@@ -54,7 +54,7 @@ describe('BM25', () => {
     const document = ['hello', 'world']
     bm25.addDocument(document, 1)
 
-    expect(() => bm25.score(['hello'], 2)).toThrow()
+    expect(bm25.score(['hello'], document, 2)).toEqual(0)
   })
 
   it('should adjust average length when adding documents', () => {

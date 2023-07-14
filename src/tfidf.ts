@@ -1,15 +1,34 @@
+type TermFrequency = Record<string, number>
+type DocumentTerms = Record<number, Set<string>>
+type DocumentTermFrequencies = Record<number, TermFrequency>
+type VectorLengths = Record<number, number | undefined>
+
 export class TfidfVectorizer {
-  documents: Record<number, string[]>
+  documents: DocumentTerms
+  termFrequencies: DocumentTermFrequencies
   ngramRange: [number, number]
+  idfCache: Record<string, number | undefined>
+  vectorLengths: VectorLengths
 
   constructor(ngramRange: [number, number] = [1, 1]) {
     this.documents = {}
+    this.termFrequencies = {}
     this.ngramRange = ngramRange
+    this.idfCache = {}
+    this.vectorLengths = {}
   }
 
   addDocument(docId: number, words: string[]) {
     const terms = this.getNgrams(words)
-    this.documents[docId] = terms
+    this.documents[docId] = new Set(terms)
+
+    const termFrequency: TermFrequency = {}
+    terms.forEach((term) => {
+      termFrequency[term] = termFrequency[term] ? termFrequency[term] + 1 : 1
+    })
+    this.termFrequencies[docId] = termFrequency
+    this.idfCache = {} // invalidate idf cache
+    delete this.vectorLengths[docId] // invalidate vector length cache for this document
   }
 
   removeDocument(docId: number) {
@@ -17,6 +36,9 @@ export class TfidfVectorizer {
       throw new Error(`Document ${docId} does not exist`)
     }
     delete this.documents[docId]
+    delete this.termFrequencies[docId]
+    this.idfCache = {} // invalidate idf cache
+    delete this.vectorLengths[docId] // invalidate vector length cache for this document
   }
 
   getNgrams(terms: string[]) {
@@ -29,20 +51,17 @@ export class TfidfVectorizer {
     return ngrams
   }
 
-  tf(term: string, document: string[]) {
-    let count = 0
-    for (let i = 0; i < document.length; i++) {
-      if (term === document[i]) {
-        count++
-      }
+  tf(term: string, docId: number) {
+    if (!this.termFrequencies[docId]) {
+      return 0
     }
-    return count > 0 ? 1 + Math.log(count) : 0
+    return this.termFrequencies[docId][term] || 0
   }
 
   numDocsContaining(term: string) {
     let count = 0
     for (const docId in this.documents) {
-      if (this.documents[docId].includes(term)) {
+      if (this.documents[docId].has(term)) {
         count++
       }
     }
@@ -50,19 +69,33 @@ export class TfidfVectorizer {
   }
 
   idf(term: string) {
+    if (this.idfCache[term] !== undefined) {
+      return this.idfCache[term]
+    }
+
     const numDocs = Object.keys(this.documents).length
     if (numDocs === 0) throw new Error('No documents exist')
-    return Math.log(numDocs / (1 + this.numDocsContaining(term)))
+
+    const idf = Math.log(numDocs / (1 + this.numDocsContaining(term)))
+    this.idfCache[term] = idf
+    return idf
   }
 
-  tfidf(term: string, document: string[]) {
-    const tfidf = this.tf(term, document) * this.idf(term)
-    return tfidf / this.vectorLength(document)
+  tfidf(term: string, docId: number) {
+    const tfidf = this.tf(term, docId) * this.idf(term)
+    return tfidf / this.vectorLength(docId)
   }
 
-  vectorLength(document: string[]) {
-    const tfidfScores = document.map((term) => this.tf(term, document) * this.idf(term))
+  vectorLength(docId: number) {
+    if (this.vectorLengths[docId] !== undefined) {
+      return this.vectorLengths[docId]
+    }
+
+    const tfidfScores = Array.from(this.documents[docId]).map((term) => this.tf(term, docId) * this.idf(term))
     const sumSquares = tfidfScores.reduce((sum, score) => sum + score * score, 0)
-    return Math.sqrt(sumSquares)
+    const length = Math.sqrt(sumSquares)
+
+    this.vectorLengths[docId] = length
+    return length
   }
 }

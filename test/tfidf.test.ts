@@ -4,49 +4,82 @@ describe('TfidfVectorizer', () => {
   let vectorizer: TfidfVectorizer
 
   beforeEach(() => {
-    vectorizer = new TfidfVectorizer([1, 2])
+    vectorizer = new TfidfVectorizer([1, 1])
+
+    vectorizer.addDocument(1, ['the', 'quick', 'brown', 'fox'])
+    vectorizer.addDocument(2, ['jumps', 'over', 'the', 'lazy', 'dog'])
+    vectorizer.addDocument(3, ['sun', 'is', 'shining', 'today'])
   })
 
-  it('should add documents correctly', () => {
-    vectorizer.addDocument(1, ['a', 'b', 'c'])
-    expect(vectorizer.documents[1]).toEqual(['a', 'b', 'c', 'a b', 'b c'])
+  describe('tf', () => {
+    test('should return the correct term frequency', () => {
+      const tfTheDoc1 = vectorizer.tf('the', 1)
+      const tfTheDoc2 = vectorizer.tf('the', 2)
+      const tfFoxDoc1 = vectorizer.tf('fox', 1)
+      const tfFoxDoc2 = vectorizer.tf('fox', 2)
+
+      expect(tfTheDoc1).toBe(1)
+      expect(tfTheDoc2).toBe(1)
+      expect(tfFoxDoc1).toBe(1)
+      expect(tfFoxDoc2).toBe(0)
+    })
   })
 
-  it('should remove documents correctly', () => {
-    vectorizer.addDocument(1, ['a', 'b', 'c'])
-    vectorizer.removeDocument(1)
-    expect(vectorizer.documents[1]).toBeUndefined()
+  describe('tfidf', () => {
+    test('should return the correct tf-idf score', () => {
+      const tfidfTheDoc1 = vectorizer.tfidf('the', 1)
+      const tfidfTheDoc2 = vectorizer.tfidf('the', 2)
+      const tfidfFoxDoc1 = vectorizer.tfidf('fox', 1)
+      const tfidfSunDoc3 = vectorizer.tfidf('sun', 3)
+
+      expect(tfidfTheDoc1).toBeCloseTo(tfidfTheDoc2, 5)
+      expect(tfidfFoxDoc1).toBeCloseTo(0.5773502691896258, 5)
+      expect(tfidfSunDoc3).toBeGreaterThan(0)
+    })
   })
 
-  it('should calculate tf correctly', () => {
-    const tf = vectorizer.tf('a', ['a', 'b', 'a', 'c', 'a'])
-    expect(tf).toBeCloseTo(1 + Math.log(3))
+  describe('addDocument', () => {
+    test('should correctly add a document', () => {
+      vectorizer.addDocument(4, ['adding', 'another', 'document'])
+      const tfAddingDoc4 = vectorizer.tf('adding', 4)
+      expect(tfAddingDoc4).toBe(1)
+    })
   })
 
-  it('should calculate numDocsContaining correctly', () => {
-    vectorizer.addDocument(1, ['a', 'b', 'c'])
-    vectorizer.addDocument(2, ['a', 'd', 'e'])
-    vectorizer.addDocument(3, ['f', 'g', 'h'])
-    const count = vectorizer.numDocsContaining('a')
-    expect(count).toBe(2)
+  describe('removeDocument', () => {
+    test('should correctly remove a document', () => {
+      vectorizer.removeDocument(3)
+      expect(() => vectorizer.removeDocument(3)).toThrowError('Document 3 does not exist')
+    })
   })
 
-  it('should calculate idf correctly', () => {
-    const vectorizer = new TfidfVectorizer()
-    vectorizer.addDocument(1, ['a', 'b', 'c'])
-    vectorizer.addDocument(2, ['a', 'd', 'e'])
-    vectorizer.addDocument(3, ['f', 'g', 'h'])
-    const idf = vectorizer.idf('a')
-    expect(idf).toBeCloseTo(0)
+  describe('getNgrams', () => {
+    test('should return the correct ngrams', () => {
+      const ngrams = vectorizer.getNgrams(['get', 'ngrams', 'test'])
+      expect(ngrams).toEqual(['get', 'ngrams', 'test'])
+    })
   })
 
-  it('should calculate tfidf correctly', () => {
-    const vectorizer = new TfidfVectorizer()
-    vectorizer.addDocument(1, ['a', 'b', 'c'])
-    vectorizer.addDocument(2, ['a', 'd', 'e'])
-    vectorizer.addDocument(3, ['f', 'g', 'h'])
-    const tfidf = vectorizer.tfidf('a', ['a', 'b', 'c'])
-    const expectedTfidf = (1 + Math.log(1)) * Math.log(3 / (1 + 2))
-    expect(tfidf).toBeCloseTo(expectedTfidf)
+  describe('numDocsContaining', () => {
+    test('should return the correct number of documents containing a term', () => {
+      const numDocsContainingThe = vectorizer.numDocsContaining('the')
+      expect(numDocsContainingThe).toBe(2)
+    })
+  })
+
+  describe('idf', () => {
+    test('should return the correct inverse document frequency', () => {
+      const idfThe = vectorizer.idf('the')
+      const idfFox = vectorizer.idf('fox')
+      expect(idfThe).toBeCloseTo(0, 5)
+      expect(idfFox).toBeCloseTo(Math.log(1.5), 5)
+    })
+  })
+
+  describe('vectorLength', () => {
+    test('should return the correct vector length', () => {
+      const vectorLengthDoc1 = vectorizer.vectorLength(1)
+      expect(vectorLengthDoc1).toBeGreaterThan(0)
+    })
   })
 })

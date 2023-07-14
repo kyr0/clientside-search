@@ -4,7 +4,7 @@ describe('BKTree and BKTreeNode', () => {
   let tree: BKTree
 
   beforeEach(() => {
-    tree = new BKTree()
+    tree = new BKTree(new Map())
   })
 
   it('should correctly insert and search words', () => {
@@ -62,7 +62,7 @@ describe('BKTree and BKTreeNode', () => {
     tree.insert('post')
 
     const json = tree.toJSON()
-    const restoredTree = BKTree.fromJSON(json)
+    const restoredTree = BKTree.fromJSON(json, new Map())
     let result = restoredTree.search('test', 1)
 
     expect(result).toEqual([{ distance: 0, word: 'test' }])

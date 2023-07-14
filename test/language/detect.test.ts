@@ -22,25 +22,25 @@ describe('Language Detection', () => {
 
   test('works with custom stopwords', () => {
     const text = 'fubar snafu'
-    const stopwords = {
-      custom: ['fubar', 'snafu'],
+    const stopwordsSets = {
+      custom: new Set(['fubar', 'snafu']),
     }
-    const language = detectLanguage(text, stopwords)
+    const language = detectLanguage(text, stopwordsSets)
     expect(language).toBe('custom')
   })
 
-  test('returns language with the most stopwords', () => {
-    const text = 'this is a simple test das ist ein einfacher Test'
+  test('returns language with the most stopwords in multi-lingual case', () => {
+    const text = 'this is a simple test with german: das ist ein einfacher Test'
     const language = detectLanguage(text)
     expect(language).toBe('en')
   })
 
   test('works with special characters', () => {
     const text = 'déjà vu'
-    const stopwords = {
-      fr: ['déjà', 'vu'],
+    const stopwordSets = {
+      fr: new Set(['déjà', 'vu']),
     }
-    const language = detectLanguage(text, stopwords)
+    const language = detectLanguage(text, stopwordSets)
     expect(language).toBe('fr')
   })
 

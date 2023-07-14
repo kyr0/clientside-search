@@ -54,15 +54,13 @@ export class BM25 {
     })
   }
 
-  score(query: string[], docId: number) {
+  score(query: string[], doc: string[], docId: number) {
     let score = 0
-    const doc = this.documents.get(docId)!
     query.forEach((term) => {
-      if (this.docFrequency.get(term)) {
+      const docFreq = this.docFrequency.get(term)
+      if (docFreq) {
         const tf = this.termFrequency.get(term)?.get(docId) || 0
-        const idf = Math.log(
-          (this.documents.size - this.docFrequency.get(term)! + 0.5) / (this.docFrequency.get(term)! + 0.5),
-        )
+        const idf = Math.log((this.documents.size - docFreq + 0.5) / (docFreq + 0.5))
         const norm = (tf * (this.k1 + 1)) / (tf + this.k1 * (1 - this.b + (this.b * doc.length) / this.averageLength))
         score += idf * norm
       }
@@ -72,8 +70,19 @@ export class BM25 {
 
   getScores(query: string[]) {
     const scores: Record<number, number> = {}
-    this.documents.forEach((_, docId) => {
-      scores[docId] = this.score(query, docId)
+    this.documents.forEach((doc, docId) => {
+      scores[docId] = this.score(query, doc, docId)
+    })
+    return scores
+  }
+
+  getScoresForSubset(query: string[], docIds: number[]) {
+    const scores: Record<number, number> = {}
+    docIds.forEach((docId) => {
+      const doc = this.documents.get(docId)
+      if (doc) {
+        scores[docId] = this.score(query, doc, docId)
+      }
     })
     return scores
   }

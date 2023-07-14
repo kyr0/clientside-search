@@ -24,6 +24,8 @@ export const DEFAULT_LANGUAGE: Iso2LanguageKey = 'en'
 
 export type Language = 'en' | 'de'
 
+export type DistanceCache = Map<string, Map<string, number>>
+
 export class SearchEngine {
   index: Record<string, Record<string, number>>
   docToWords: Record<string, string[]>
@@ -34,6 +36,8 @@ export class SearchEngine {
   bm25: BM25
   docMetadata: Record<string, any>
   language: LanguageSupport
+  distanceCache: DistanceCache
+  stemCache: Map<string, string>
 
   constructor(language: LanguageSupport, ngramRange: [number, number] = [1, 1]) {
     this.index = {}
@@ -43,17 +47,25 @@ export class SearchEngine {
     this.language = language
     this.stopWords = new Set(language.stopwords)
     this.vectorizer = new TfidfVectorizer(ngramRange)
-    this.bkTree = new BKTree()
+    this.distanceCache = new Map()
+    this.bkTree = new BKTree(this.distanceCache)
     this.docMetadata = {}
+    this.stemCache = new Map()
   }
 
   static fromHydratedState(compressedJSON: any, language: LanguageSupport) {
     const jsonData = JSON.parse(compressedJSON)
     const searchEngine = new SearchEngine(language, jsonData.ngramRange)
+
+    const distanceCache = new Map()
+    for (let key in jsonData.distanceCache) {
+      distanceCache.set(key, new Map(Object.entries(jsonData.distanceCache[key])))
+    }
+    searchEngine.distanceCache = distanceCache
     searchEngine.index = jsonData.index
     searchEngine.bm25 = BM25.fromJSON(jsonData.bm25)
     searchEngine.vectorizer = new TfidfVectorizer(jsonData.ngramRange)
-    searchEngine.bkTree = BKTree.fromJSON(jsonData.bkTree)
+    searchEngine.bkTree = BKTree.fromJSON(jsonData.bkTree, searchEngine.distanceCache)
     searchEngine.docMetadata = jsonData.docMetadata
     return searchEngine
   }
@@ -70,24 +82,37 @@ export class SearchEngine {
   }
 
   hydrateState() {
+    const distanceCacheObject = {}
+    for (let [key, value] of this.distanceCache) {
+      distanceCacheObject[key] = Object.fromEntries(value)
+    }
     return JSON.stringify({
       index: this.index,
       bm25: this.bm25.toJSON(),
       ngramRange: this.vectorizer.ngramRange,
       bkTree: this.bkTree.toJSON(),
       docMetadata: this.docMetadata,
+      distanceCache: distanceCacheObject,
     })
   }
 
+  getStemmedWord(word: string): string {
+    if (!this.stemCache.has(word)) {
+      this.stemCache.set(word, this.language.stem(word))
+    }
+    return this.stemCache.get(word)
+  }
+
   processText(text: string): string[] {
-    let words = text
-      .replace(/[.,!?;:]/g, '')
-      .replace(/[\-]/g, ' ')
-      .toLowerCase()
-      .split(' ')
-      .filter((word) => word.trim() !== '')
-    words = words.filter((word) => !this.stopWords.has(word))
-    words = words.map((word) => this.language.stem(word))
+    const words = []
+    const rawWords = text.replace(/[.,!?;:\-]/g, ' ').split(' ')
+
+    for (const rawWord of rawWords) {
+      const word = rawWord.trim().toLowerCase()
+      if (word !== '' && !this.stopWords.has(word)) {
+        words.push(this.getStemmedWord(word))
+      }
+    }
     return words
   }
 
@@ -107,16 +132,25 @@ export class SearchEngine {
     this.bm25.addDocument(words, docId)
     this.vectorizer.addDocument(docId, words)
 
-    words.forEach((word) => {
+    const wordsSet = new Set(words)
+    const tfidfCache = {}
+
+    wordsSet.forEach((word) => {
       if (!this.index[word]) {
         this.index[word] = {}
       }
-      this.index[word][docId] = this.vectorizer.tfidf(word, words)
+
+      // Store computed tfidf value in local cache
+      if (!tfidfCache[word]) {
+        tfidfCache[word] = this.vectorizer.tfidf(word, docId)
+      }
+
+      this.index[word][docId] = tfidfCache[word]
       this.bkTree.insert(word)
     })
 
     this.documents[docId] = text
-    this.docToWords[docId] = [...new Set(words)]
+    this.docToWords[docId] = Array.from(wordsSet)
     this.docMetadata[docId] = metadata
 
     return docId
@@ -169,9 +203,9 @@ export class SearchEngine {
     const scores = Array.from(seenDocIds).reduce((acc: Record<string, number>, docId) => {
       acc[docId] = (exactScores[docId] || 0) * 1.2 + (fuzzyScores[docId] || 0)
 
-      // Extra weight for matches in the title
-      if (this.docMetadata[docId]?.title) {
-        const titleWords = this.processText(this.docMetadata[docId].title)
+      // extra weight for matches in the title
+      if (this.docMetadata[docId]?.index_title) {
+        const titleWords = this.processText(this.docMetadata[docId].index_title)
         terms.forEach((term) => {
           if (titleWords.includes(term)) {
             acc[docId] *= 2 // increase score by 100%
@@ -236,16 +270,32 @@ export class SearchEngine {
   }
 }
 
-export const damerauLevenshteinDistance = (s1: string, s2: string) => {
-  const dp: number[][] = Array(s1.length + 1)
+export const damerauLevenshteinDistance = (s1: string, s2: string, distanceCache: Map<string, Map<string, number>>) => {
+  const cacheS1 = distanceCache.get(s1)
+  if (cacheS1) {
+    const cachedDistance = cacheS1.get(s2)
+    if (cachedDistance !== undefined) {
+      return cachedDistance
+    }
+  } else {
+    distanceCache.set(s1, new Map<string, number>())
+  }
+
+  const len1 = s1.length
+  const len2 = s2.length
+
+  const dp: number[][] = Array(len1 + 1)
     .fill(null)
-    .map(() => Array(s2.length + 1).fill(0))
+    .map(() => Array(len2 + 1).fill(0))
+
   for (let i = 0; i <= s1.length; i++) {
     dp[i][0] = i
   }
+
   for (let i = 0; i <= s2.length; i++) {
     dp[0][i] = i
   }
+
   for (let i = 1; i <= s1.length; i++) {
     for (let j = 1; j <= s2.length; j++) {
       const cost = s1[i - 1] == s2[j - 1] ? 0 : 1
@@ -259,5 +309,9 @@ export const damerauLevenshteinDistance = (s1: string, s2: string) => {
       }
     }
   }
+
+  // Store the calculated distance in the cache
+  distanceCache.get(s1).set(s2, dp[s1.length][s2.length])
+
   return dp[s1.length][s2.length]
 }

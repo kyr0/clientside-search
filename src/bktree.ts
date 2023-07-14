@@ -1,4 +1,4 @@
-import { damerauLevenshteinDistance } from './engine'
+import { DistanceCache, damerauLevenshteinDistance } from './engine'
 
 export class BKTreeNode {
   word: string
@@ -33,9 +33,11 @@ export class BKTreeNode {
 
 export class BKTree {
   root: BKTreeNode | null
+  distanceCache: DistanceCache
 
-  constructor() {
+  constructor(distanceCache: DistanceCache) {
     this.root = null
+    this.distanceCache = distanceCache
   }
 
   toJSON() {
@@ -44,8 +46,8 @@ export class BKTree {
     }
   }
 
-  static fromJSON(json: any) {
-    const tree = new BKTree()
+  static fromJSON(json: any, distanceCache: DistanceCache) {
+    const tree = new BKTree(distanceCache)
     tree.root = json.root ? BKTreeNode.fromJSON(json.root) : null
     return tree
   }
@@ -59,7 +61,7 @@ export class BKTree {
   }
 
   _insert(word: string, node: BKTreeNode) {
-    const distance = damerauLevenshteinDistance(word, node.word)
+    const distance = damerauLevenshteinDistance(word, node.word, this.distanceCache)
     if (distance === 0) {
       node.count++ // Increment count for the existing word
     } else if (!node.children.has(distance)) {
@@ -75,19 +77,20 @@ export class BKTree {
   }
 
   _remove(word: string, node: BKTreeNode): BKTreeNode | null {
-    const distance = damerauLevenshteinDistance(word, node.word)
+    const distance = damerauLevenshteinDistance(word, node.word, this.distanceCache)
     if (distance === 0) {
-      // Found the word
       node.count--
       if (node.count === 0) {
-        // If count is 0, remove the node
-        const children = Array.from(node.children.values())
-        if (children.length === 0) {
+        if (node.children.size === 0) {
           return null
         } else {
-          let newRoot = children[0]
-          for (let i = 1; i < children.length; i++) {
-            this._insert(children[i].word, newRoot)
+          // Keep the structure of the subtree.
+          const entries = Array.from(node.children.entries())
+          const [, firstChild] = entries[0]
+          const newRoot = firstChild
+          for (let i = 1; i < entries.length; i++) {
+            const [nextDistance, nextChild] = entries[i]
+            newRoot.children.set(nextDistance, nextChild)
           }
           return newRoot
         }
@@ -117,12 +120,16 @@ export class BKTree {
   }
 
   _search(word: string, maxDistance: number, node: BKTreeNode, result: { word: string; distance: number }[]) {
-    const distance = damerauLevenshteinDistance(word, node.word)
+    const distance = damerauLevenshteinDistance(word, node.word, this.distanceCache)
+    const lowerBound = distance - maxDistance
+    const upperBound = distance + maxDistance
+
     if (distance <= maxDistance) {
       result.push({ word: node.word, distance })
     }
+
     node.children.forEach((childNode, childDistance) => {
-      if (childDistance >= distance - maxDistance && childDistance <= distance + maxDistance) {
+      if (childDistance >= lowerBound && childDistance <= upperBound) {
         this._search(word, maxDistance, childNode, result)
       }
     })
