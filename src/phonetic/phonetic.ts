@@ -1,12 +1,12 @@
 import { Iso2LanguageKey } from '../engine'
-import { kolnerPhonetik } from './de'
+import { koelnerPhonetik } from './de'
 import { doubleMetaphone } from './en'
 
 const DEFAULT_PHONETIC_ALGORITHMS: {
   [key in Iso2LanguageKey]: PhoneticFn
 } = {
   en: doubleMetaphone,
-  de: kolnerPhonetik,
+  de: koelnerPhonetik,
 }
 
 export type PhoneticFn = (word: string) => string

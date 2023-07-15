@@ -8,7 +8,7 @@ This search engine uses several advanced algorithms to provide robust and effici
 
 <h2 align="center">Developers' User Stories</h2>
 
-1. I want to use a Lucene-like index that uses TF-IDF vectorization, BM25 and BKTree ranking as well as stemming and stopwords on client side.
+1. I want to use a Lucene-like index that uses TF-IDF vectorization, BM25 and BKTree ranking as well as snowball stemming by and stopwords on client side.
 
 2. I want to generate the search index either on client side or server-side (and re-hydrate/re-use it on client or server-side). State information should be small and compressed.
 
@@ -24,7 +24,7 @@ This search engine uses several advanced algorithms to provide robust and effici
 
 - ✅ _Full-Text Search_: Provides the ability to perform a comprehensive text-based search over a large collection of documents.
 - ✅ _Multilingual Support_: Supports multiple languages for indexing and searching documents and automatic language detection for input text.
-- ✅ _Text Processing_: Includes text transformation operations like converting to lower case, splitting by words, stemming, and stopword removal.
+- ✅ _Text Processing_: Includes text transformation operations like converting to lower case, splitting by words, snowball stemming (Dr. Martin Porter), and stopword removal.
 - ✅ _Document Indexing_: Allows adding of documents to the index along with metadata to make them searchable.
   Document Removal: Provides functionality to remove a specific document from the index based on its ID.
 - ✅ _Search Query Processing_: Processes search queries in the same way as document text to ensure a consistent matching algorithm.

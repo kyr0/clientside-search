@@ -44,6 +44,7 @@ export class SearchEngine {
   distanceCache: DistanceCache
   stemCache: Map<string, string>
   stemmedDocuments: Array<StemmedState>
+  stemmedMetadata: Record<number, { [metadataKey: string]: Array<string> }>
   ngramRange: [number, number]
 
   constructor(language: LanguageSupport, ngramRange: [number, number] = [1, 1]) {
@@ -60,6 +61,7 @@ export class SearchEngine {
     this.docMetadata = {}
     this.stemCache = new Map()
     this.stemmedDocuments = []
+    this.stemmedMetadata = {}
   }
 
   static fromHydratedState(compressedJSON: any, language: LanguageSupport) {
@@ -69,6 +71,7 @@ export class SearchEngine {
     }
     const searchEngine = new SearchEngine(language, jsonData.ngramRange)
     searchEngine.stemmedDocuments = jsonData.stemmedDocuments
+    searchEngine.stemmedMetadata = jsonData.stemmedMetadata
 
     for (let i = 0; i < searchEngine.stemmedDocuments.length; i++) {
       const stemmedDocument = searchEngine.stemmedDocuments[i]
@@ -82,6 +85,7 @@ export class SearchEngine {
       stemmedDocuments: this.stemmedDocuments,
       ngramRange: this.ngramRange,
       iso2Language: this.language.iso2Language,
+      stemmedMetadata: this.stemmedMetadata,
     })
   }
 
@@ -114,7 +118,6 @@ export class SearchEngine {
     }
     return words
   }
-
   addDocumentStemmed(words: string[], docId: number, metadata: any = {}) {
     this.bm25.addDocument(words, docId)
     this.vectorizer.addDocument(docId, words)
@@ -152,6 +155,11 @@ export class SearchEngine {
         continue
       }
       const metaWords = this.processText(metadata[key])
+
+      if (!this.stemmedMetadata[docId]) {
+        this.stemmedMetadata[docId] = {}
+      }
+      this.stemmedMetadata[docId][key] = metaWords
       words.push(...metaWords)
     }
 
@@ -160,15 +168,14 @@ export class SearchEngine {
     return this.addDocumentStemmed(words, docId, metadata)
   }
 
-  search(query: string) {
+  search(query: string, topN: number = 10) {
     const terms = this.processText(query)
     const exactScores: Record<string, number> = {}
     const fuzzyScores: Record<string, number> = {}
     const seenDocIds: Set<string> = new Set()
     const bm25ScoresCache: Record<string, any> = {}
 
-    terms.forEach((term) => {
-      // use BKTree to find similar words
+    terms.some((term) => {
       const similarWords = this.getSimilarWords(term)
       similarWords.forEach((similarWord, index) => {
         const docIds = this.index[similarWord.word] || {}
@@ -180,40 +187,41 @@ export class SearchEngine {
             bm25ScoresCache[term] = this.bm25.getScores([term])
           }
 
-          // if the word from BKTree is the same as the term, it's an exact match
           if (similarWord.word === term) {
             if (!exactScores[docId]) {
               exactScores[docId] = 0
             }
             exactScores[docId] += 0.25 + bm25ScoresCache[term][docId]
           } else {
-            // else, it's a fuzzy match
             if (!fuzzyScores[docId]) {
               fuzzyScores[docId] = 0
             }
 
             fuzzyScores[docId] += 0.125 + bm25ScoresCache[term][docId]
 
-            // if the previous similar word has the same distance, use phonetics to weighten
             if (similarWords[index - 1] && similarWords[index - 1].distance === similarWord.distance) {
               fuzzyScores[docId] *= getPhoneticWeight(term, similarWord.word, this.language.iso2Language)
             }
           }
         })
+
+        // early exit if the maximum number of results is reached
+        if (seenDocIds.size >= topN) {
+          return true
+        }
       })
+
+      return false
     })
 
     // Combine the scores with weights, giving higher weight to exact matches
     const scores = Array.from(seenDocIds).reduce((acc: Record<string, number>, docId) => {
       acc[docId] = (exactScores[docId] || 0) * 1.2 + (fuzzyScores[docId] || 0)
 
-      // extra weight for matches in the title
-      // TODO: do this and cache this upfront
-      if (this.docMetadata[docId]?.index_title) {
-        const titleWords = this.processText(this.docMetadata[docId].index_title)
+      if (this.stemmedMetadata[docId]?.index_title) {
         terms.forEach((term) => {
-          if (titleWords.includes(term)) {
-            acc[docId] *= 2 // increase score by 100%
+          if (this.stemmedMetadata[docId]?.index_title.includes(term)) {
+            acc[docId] *= 2
           }
         })
       }
@@ -221,8 +229,9 @@ export class SearchEngine {
       return acc
     }, {})
 
-    // sort the documents by scores in descending order
-    const docIds = Object.keys(scores).sort((a, b) => scores[b] - scores[a])
+    const docIds = Object.keys(scores)
+      .sort((a, b) => scores[b] - scores[a])
+      .slice(0, topN)
 
     return docIds.map((docId) => ({
       id: parseInt(docId, 10),

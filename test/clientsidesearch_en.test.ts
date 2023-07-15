@@ -95,6 +95,14 @@ describe('SearchEngine', () => {
     // highest score for the article with title 'Communication' as it represents the best match
     const result2 = searchEngine.search('inquiry studying these transmissions')
     expect(result2[0].metadata.title).toBe('Communication')
+
+    const rehydratedEngine = SearchEngine.fromHydratedState(searchEngine.hydrateState(), language)
+
+    // highest score for the article with title 'Information' as it's headline contains the search term
+    expect(rehydratedEngine.search('information')[0].metadata.title).toBe('Information')
+
+    // highest score for the article with title 'Communication' as it represents the best match
+    expect(rehydratedEngine.search('inquiry studying these transmissions')[0].metadata.title).toBe('Communication')
   })
 
   test('should match with phonetics when levensthein distance is similar', () => {

@@ -1,4 +1,4 @@
-export function kolnerPhonetik(word: string): string {
+export function koelnerPhonetik(word: string): string {
   const replacements: { [key: string]: string } = {
     a: '0',
     e: '0',
