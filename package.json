@@ -1,6 +1,6 @@
 {
   "name": "clientside-search",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -48,11 +48,13 @@
   "exports": {
     ".": {
       "require": "./dist/index.cjs.js",
-      "import": "./dist/index.esm.js"
+      "import": "./dist/index.esm.js",
+      "types": "./dist/index.d.ts"
     },
     "./language-detect": {
       "require": "./dist/language-detect.cjs.js",
-      "import": "./dist/language-detect.esm.js"
+      "import": "./dist/language-detect.esm.js",
+      "types": "./dist/language-detect.esm.d.ts"
     },
     "./en": {
       "require": "./dist/en.cjs.js",
