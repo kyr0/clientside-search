@@ -1,4 +1,4 @@
-import { doubleMetaphone } from '../../dist/index.esm'
+import { doubleMetaphone } from '../../dist/phonetic.esm'
 
 describe('doubleMetaphone function', () => {
   test('should return correct phonetic codes for a single word', () => {

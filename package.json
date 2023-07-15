@@ -63,6 +63,16 @@
       "require": "./dist/de.cjs.js",
       "import": "./dist/de.esm.js",
       "types": "./dist/de.esm.d.ts"
+    },
+    "./phonetic": {
+      "require": "./dist/phonetic.cjs.js",
+      "import": "./dist/phonetic.esm.js",
+      "types": "./dist/phonetic.esm.d.ts"
+    },
+    "./stem": {
+      "require": "./dist/stem.cjs.js",
+      "import": "./dist/stem.esm.js",
+      "types": "./dist/stem.esm.d.ts"
     }
   },
   "module": "./dist/index.esm.js",

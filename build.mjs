@@ -35,3 +35,21 @@ await buildForNode({
     logLevel: 'error',
   },
 })
+
+await buildForNode({
+  entryPoint: './src/phonetic/index.ts',
+  outfile: './dist/phonetic.js',
+  debug: process.argv.indexOf('--dev') > -1,
+  esBuildOptions: {
+    logLevel: 'error',
+  },
+})
+
+await buildForNode({
+  entryPoint: './src/stem/index.ts',
+  outfile: './dist/stem.js',
+  debug: process.argv.indexOf('--dev') > -1,
+  esBuildOptions: {
+    logLevel: 'error',
+  },
+})

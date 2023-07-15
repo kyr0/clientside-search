@@ -1,4 +1,4 @@
-import { Iso2LanguageKey, getPhoneticWeight } from '../../dist/index.esm'
+import { Iso2LanguageKey, getPhoneticWeight } from '../../dist/phonetic.esm'
 
 describe('getPhoneticWeight', () => {
   it('should return 1 if language is not supported', () => {

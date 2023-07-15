@@ -1,4 +1,4 @@
-import { German2Stemmer, stem_de } from '../../dist/index.esm'
+import { German2Stemmer, stem_de } from '../../dist/stem.esm'
 
 describe('German2Stemmer Tests', () => {
   let stemmer: German2Stemmer

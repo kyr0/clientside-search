@@ -1,4 +1,4 @@
-import { koelnerPhonetik } from '../../dist/index.esm'
+import { koelnerPhonetik } from '../../dist/phonetic.esm'
 
 describe('koelnerPhonetik function', () => {
   test('should return correct phonetic code for a single word', () => {
