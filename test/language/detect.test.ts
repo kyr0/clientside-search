@@ -49,4 +49,25 @@ describe('Language Detection', () => {
     const language = detectLanguage(text)
     expect(language).toBe('en')
   })
+
+  test('detects French text', () => {
+    const text = 'Ceci est un test simple qui devrait être identifié comme français'
+    const language = detectLanguage(text)
+    expect(language).toBe('fr')
+  })
+
+  test('works with French stopwords', () => {
+    const text = 'le, la, les, je, tu'
+    const stopwordsSets = {
+      fr: new Set(['le', 'la', 'les', 'je', 'tu']),
+    }
+    const language = detectLanguage(text, stopwordsSets)
+    expect(language).toBe('fr')
+  })
+
+  test('returns language with the most stopwords in multi-lingual case including French', () => {
+    const text = 'this is a simple test with french: Ceci est un test simple'
+    const language = detectLanguage(text)
+    expect(language).toBe('en')
+  })
 })

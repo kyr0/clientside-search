@@ -31,6 +31,8 @@ export interface StemmedState {
   m?: any // metadata
 }
 
+export const RE_WORD_SPLITTER = /[.,\/#!$%\^&\*;:{}=\-_~()’´`′\']/g
+
 export class SearchEngine {
   index: Record<string, Record<string, number>>
   docToWords: Record<string, string[]>
@@ -108,7 +110,7 @@ export class SearchEngine {
 
   processText(text: string): string[] {
     const words = []
-    const rawWords = text.replace(/[.,!?;:’´`′\'\-]/g, ' ').split(' ')
+    const rawWords = text.replace(RE_WORD_SPLITTER, ' ').split(' ')
 
     for (const rawWord of rawWords) {
       const word = rawWord.trim().toLowerCase()
