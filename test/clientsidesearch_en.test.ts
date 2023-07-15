@@ -33,11 +33,6 @@ describe('SearchEngine', () => {
 
     expect(processedText).toEqual(expectedText)
   })
-  test('should add a document correctly', () => {
-    const doc = 'This is a test document.'
-    const docId = searchEngine.addDocument(doc)
-    expect(searchEngine.documents[docId]).toEqual(doc)
-  })
 
   test('should search for a query correctly', () => {
     const doc1 = 'This is a test document.'
@@ -63,17 +58,16 @@ describe('SearchEngine', () => {
   test('should serialize and deserialize correctly using hydrateState and fromHydratedState', async () => {
     const hydratedState = searchEngine.hydrateState()
 
+    expect(JSON.parse(hydratedState).iso2Language).toEqual(language.iso2Language)
+
     const size = await gzipSize(hydratedState).catch(() => 0)
     console.log('INDEX SIZE', prettyBytes(size), '(gzip)')
 
     const hydratedEngine = SearchEngine.fromHydratedState(hydratedState, language)
 
     expect(hydratedEngine).toBeInstanceOf(SearchEngine)
-    expect(hydratedEngine.index).toEqual(searchEngine.index)
-    expect(hydratedEngine.bm25).toEqual(searchEngine.bm25)
-    expect(hydratedEngine.vectorizer.ngramRange).toEqual(searchEngine.vectorizer.ngramRange)
-    expect(hydratedEngine.stopWords).toEqual(searchEngine.stopWords)
-    expect(hydratedEngine.bkTree).toEqual(searchEngine.bkTree)
+    expect(hydratedEngine.stemmedDocuments).toEqual(searchEngine.stemmedDocuments)
+    expect(hydratedEngine.ngramRange).toEqual(searchEngine.ngramRange)
 
     const result = hydratedEngine.search('fence')
     // can it handle UTF8 characters?

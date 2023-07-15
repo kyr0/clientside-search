@@ -3,6 +3,7 @@ import language from '../dist/de.esm'
 import { readFileSync } from 'fs'
 import { gzipSize } from 'gzip-size'
 import prettyBytes from 'pretty-bytes'
+import { Iso2LanguageKey } from '../dist/language-detect.iife'
 
 const wikipediaArticles = JSON.parse(readFileSync('./wikipediaArticles_de.json', 'utf8'))
 
@@ -46,12 +47,6 @@ describe('SearchEngine', () => {
     expect(res[0].metadata.id).toEqual('zaun')
   })
 
-  test('should add a document correctly', () => {
-    const doc = 'Dies ist ein Test-Dokument.'
-    const docId = searchEngine.addDocument(doc)
-    expect(searchEngine.documents[docId]).toEqual(doc)
-  })
-
   test('should search for a query correctly', () => {
     const doc1 = 'Das ist ein Testdokument.'
     const doc2 = 'In diesem Dokument gehts um Tests.'
@@ -61,7 +56,6 @@ describe('SearchEngine', () => {
     const doc3Id = searchEngine.addDocument(doc3)
 
     const result = searchEngine.search('Test')
-    console.log('result DE', result)
     expect(result.length).toBeGreaterThanOrEqual(2)
 
     expect(result[0]).toEqual({ id: doc2Id, score: 1.2252582925045064, metadata: {} })
@@ -81,17 +75,16 @@ describe('SearchEngine', () => {
   test('should serialize and deserialize correctly using hydrateState and fromHydratedState', async () => {
     const hydratedState = searchEngine.hydrateState()
 
+    expect(JSON.parse(hydratedState).iso2Language).toEqual(language.iso2Language)
+
     const size = await gzipSize(hydratedState).catch(() => 0)
     console.log('INDEX SIZE', prettyBytes(size), '(gzip)')
 
     const hydratedEngine = SearchEngine.fromHydratedState(hydratedState, language)
 
     expect(hydratedEngine).toBeInstanceOf(SearchEngine)
-    expect(hydratedEngine.index).toEqual(searchEngine.index)
-    expect(hydratedEngine.bm25).toEqual(searchEngine.bm25)
-    expect(hydratedEngine.vectorizer.ngramRange).toEqual(searchEngine.vectorizer.ngramRange)
-    expect(hydratedEngine.stopWords).toEqual(searchEngine.stopWords)
-    expect(hydratedEngine.bkTree).toEqual(searchEngine.bkTree)
+    expect(hydratedEngine.stemmedDocuments).toEqual(searchEngine.stemmedDocuments)
+    expect(hydratedEngine.ngramRange).toEqual(searchEngine.ngramRange)
 
     const result = hydratedEngine.search('Zaun')
 
@@ -105,7 +98,9 @@ describe('SearchEngine', () => {
     expect(result3.length).toBe(1)
   })
 
-  test('add and search wikipedia articles', () => {
+  test('add and search wikipedia articles', async () => {
+    const origDocs: any = []
+
     wikipediaArticles.forEach((article: any) => {
       /** e.g.: article == {
         term: 'information',
@@ -113,7 +108,19 @@ describe('SearchEngine', () => {
         metadata: { id: 'Q11028', index_title: 'Information', lang: 'en' }
       }, */
       searchEngine.addDocument(article.text, article.metadata)
+
+      origDocs.push({
+        text: article.text,
+        metadata: article.metadata,
+      })
     })
+
+    const sizeOrig = await gzipSize(JSON.stringify(origDocs)).catch(() => 0)
+    console.log('uncompressed input text', prettyBytes(JSON.stringify(origDocs).length))
+    console.log('compressed input text', prettyBytes(sizeOrig), '(gzip)')
+
+    const size = await gzipSize(searchEngine.hydrateState()).catch(() => 0)
+    console.log('hydrated state size', prettyBytes(size), '(gzip)')
 
     // highest score for the article with title 'Information' as it's headline contains the search term
     const result = searchEngine.search('information')

@@ -54,23 +54,4 @@ describe('BKTree and BKTreeNode', () => {
     expect(result2).toHaveLength(1)
     expect(result2).toEqual([{ distance: 1, word: 'roast' }]) // gone
   })
-
-  it('should correctly serialize to JSON and restore from JSON', () => {
-    tree.insert('test')
-    tree.insert('toast')
-    tree.insert('roast')
-    tree.insert('post')
-
-    const json = tree.toJSON()
-    const restoredTree = BKTree.fromJSON(json, new Map())
-    let result = restoredTree.search('test', 1)
-
-    expect(result).toEqual([{ distance: 0, word: 'test' }])
-
-    result = restoredTree.search('toast', 1)
-    expect(result).toEqual([
-      { distance: 0, word: 'toast' },
-      { distance: 1, word: 'roast' },
-    ])
-  })
 })

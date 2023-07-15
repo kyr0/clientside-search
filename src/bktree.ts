@@ -40,18 +40,6 @@ export class BKTree {
     this.distanceCache = distanceCache
   }
 
-  toJSON() {
-    return {
-      root: this.root ? this.root.toJSON() : null,
-    }
-  }
-
-  static fromJSON(json: any, distanceCache: DistanceCache) {
-    const tree = new BKTree(distanceCache)
-    tree.root = json.root ? BKTreeNode.fromJSON(json.root) : null
-    return tree
-  }
-
   insert(word: string) {
     if (this.root === null) {
       this.root = new BKTreeNode(word)

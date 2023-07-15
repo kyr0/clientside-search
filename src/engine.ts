@@ -26,6 +26,11 @@ export type Language = 'en' | 'de'
 
 export type DistanceCache = Map<string, Map<string, number>>
 
+export interface StemmedState {
+  s: Array<string> // stemmed text
+  m?: any // metadata
+}
+
 export class SearchEngine {
   index: Record<string, Record<string, number>>
   docToWords: Record<string, string[]>
@@ -38,6 +43,8 @@ export class SearchEngine {
   language: LanguageSupport
   distanceCache: DistanceCache
   stemCache: Map<string, string>
+  stemmedDocuments: Array<StemmedState>
+  ngramRange: [number, number]
 
   constructor(language: LanguageSupport, ngramRange: [number, number] = [1, 1]) {
     this.index = {}
@@ -45,32 +52,39 @@ export class SearchEngine {
     this.documents = {}
     this.bm25 = new BM25()
     this.language = language
+    this.ngramRange = ngramRange
     this.stopWords = new Set(language.stopwords)
     this.vectorizer = new TfidfVectorizer(ngramRange)
     this.distanceCache = new Map()
     this.bkTree = new BKTree(this.distanceCache)
     this.docMetadata = {}
     this.stemCache = new Map()
+    this.stemmedDocuments = []
   }
 
   static fromHydratedState(compressedJSON: any, language: LanguageSupport) {
     const jsonData = JSON.parse(compressedJSON)
-    const searchEngine = new SearchEngine(language, jsonData.ngramRange)
-
-    const distanceCache = new Map()
-    for (let key in jsonData.distanceCache) {
-      distanceCache.set(key, new Map(Object.entries(jsonData.distanceCache[key])))
+    if (jsonData.iso2Language !== language.iso2Language) {
+      throw new Error(`Language mismatch: expected ${language.iso2Language} but got ${jsonData.iso2Language} from JSON`)
     }
-    searchEngine.distanceCache = distanceCache
-    searchEngine.index = jsonData.index
-    searchEngine.bm25 = BM25.fromJSON(jsonData.bm25)
-    searchEngine.vectorizer = new TfidfVectorizer(jsonData.ngramRange)
-    searchEngine.bkTree = BKTree.fromJSON(jsonData.bkTree, searchEngine.distanceCache)
-    searchEngine.docMetadata = jsonData.docMetadata
+    const searchEngine = new SearchEngine(language, jsonData.ngramRange)
+    searchEngine.stemmedDocuments = jsonData.stemmedDocuments
+
+    for (let i = 0; i < searchEngine.stemmedDocuments.length; i++) {
+      const stemmedDocument = searchEngine.stemmedDocuments[i]
+      searchEngine.addDocumentStemmed(stemmedDocument.s, i, stemmedDocument.m)
+    }
     return searchEngine
   }
 
-  // Method to load index from a JSON file on the server
+  hydrateState() {
+    return JSON.stringify({
+      stemmedDocuments: this.stemmedDocuments,
+      ngramRange: this.ngramRange,
+      iso2Language: this.language.iso2Language,
+    })
+  }
+
   static async fromHydratedStateRemote(filePath: string, language: LanguageSupport) {
     try {
       const response = await fetch(filePath)
@@ -79,21 +93,6 @@ export class SearchEngine {
     } catch (error) {
       console.error('Error loading index from compressed JSON:', error)
     }
-  }
-
-  hydrateState() {
-    const distanceCacheObject = {}
-    for (let [key, value] of this.distanceCache) {
-      distanceCacheObject[key] = Object.fromEntries(value)
-    }
-    return JSON.stringify({
-      index: this.index,
-      bm25: this.bm25.toJSON(),
-      ngramRange: this.vectorizer.ngramRange,
-      bkTree: this.bkTree.toJSON(),
-      docMetadata: this.docMetadata,
-      distanceCache: distanceCacheObject,
-    })
   }
 
   getStemmedWord(word: string): string {
@@ -116,19 +115,7 @@ export class SearchEngine {
     return words
   }
 
-  addDocument(text: string, metadata: any = {}) {
-    const docId = this.generateId(text)
-    const words = this.processText(text)
-
-    // include meta data in the index
-    for (const key in metadata) {
-      if (typeof metadata[key] !== 'string' || !key.startsWith('index_')) {
-        continue
-      }
-      const metaWords = this.processText(metadata[key])
-      words.push(...metaWords)
-    }
-
+  addDocumentStemmed(words: string[], docId: number, metadata: any = {}) {
     this.bm25.addDocument(words, docId)
     this.vectorizer.addDocument(docId, words)
 
@@ -149,11 +136,28 @@ export class SearchEngine {
       this.bkTree.insert(word)
     })
 
-    this.documents[docId] = text
     this.docToWords[docId] = Array.from(wordsSet)
     this.docMetadata[docId] = metadata
 
     return docId
+  }
+
+  addDocument(text: string, metadata: any = {}) {
+    const docId = this.generateId(text)
+    const words = this.processText(text)
+
+    // include meta data in the index
+    for (const key in metadata) {
+      if (typeof metadata[key] !== 'string' || !key.startsWith('index_')) {
+        continue
+      }
+      const metaWords = this.processText(metadata[key])
+      words.push(...metaWords)
+    }
+
+    this.stemmedDocuments.push({ s: words, m: metadata })
+
+    return this.addDocumentStemmed(words, docId, metadata)
   }
 
   search(query: string) {
@@ -204,6 +208,7 @@ export class SearchEngine {
       acc[docId] = (exactScores[docId] || 0) * 1.2 + (fuzzyScores[docId] || 0)
 
       // extra weight for matches in the title
+      // TODO: do this and cache this upfront
       if (this.docMetadata[docId]?.index_title) {
         const titleWords = this.processText(this.docMetadata[docId].index_title)
         terms.forEach((term) => {
@@ -238,6 +243,7 @@ export class SearchEngine {
     return similarWords.sort((a, b) => a.distance - b.distance).map((similarWord) => similarWord)
   }
 
+  // a variation of Daniel J. Bernstein (djb) string hash function
   generateId(text: string) {
     let hash = 0
     for (let i = 0; i < text.length; i++) {
@@ -266,7 +272,6 @@ export class SearchEngine {
     this.vectorizer.removeDocument(docId)
 
     delete this.documents[docId]
-    delete this.docToWords[docId]
   }
 }
 

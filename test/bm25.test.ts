@@ -14,7 +14,10 @@ describe('BM25', () => {
   it('should add documents correctly', () => {
     const document = ['hello', 'world']
     bm25.addDocument(document, 1)
-    expect(bm25.toJSON()).toMatchObject({
+    expect({
+      documents: Array.from(bm25.documents),
+      averageLength: bm25.averageLength,
+    }).toMatchObject({
       documents: [[1, document]],
       averageLength: document.length,
     })
@@ -30,16 +33,6 @@ describe('BM25', () => {
 
     expect(scores[1]).toBeCloseTo(-1.609)
     expect(scores[2]).toBeCloseTo(-1.609)
-  })
-
-  it('should serialize to JSON and back', () => {
-    const document = ['hello', 'world']
-    bm25.addDocument(document, 1)
-
-    const json = JSON.stringify(bm25.toJSON())
-    const newBm25 = BM25.fromJSON(JSON.parse(json))
-
-    expect(newBm25.toJSON()).toEqual(bm25.toJSON())
   })
 
   it('should handle non-existing terms in score calculation', () => {
@@ -63,6 +56,6 @@ describe('BM25', () => {
     bm25.addDocument(document1, 1)
     bm25.addDocument(document2, 2)
 
-    expect(bm25.toJSON().averageLength).toEqual((document1.length + document2.length) / 2)
+    expect(bm25.averageLength).toEqual((document1.length + document2.length) / 2)
   })
 })
