@@ -37,6 +37,25 @@ await buildForNode({
 })
 
 await buildForNode({
+  entryPoint: './src/language/es.ts',
+  outfile: './dist/es.js',
+  debug: process.argv.indexOf('--dev') > -1,
+  esBuildOptions: {
+    logLevel: 'error',
+  },
+})
+
+// experimental
+await buildForNode({
+  entryPoint: './src/language/jp.ts',
+  outfile: './dist/jp.js',
+  debug: process.argv.indexOf('--dev') > -1,
+  esBuildOptions: {
+    logLevel: 'error',
+  },
+})
+
+await buildForNode({
   entryPoint: './src/language/detect.ts',
   outfile: './dist/language-detect.js',
   debug: process.argv.indexOf('--dev') > -1,

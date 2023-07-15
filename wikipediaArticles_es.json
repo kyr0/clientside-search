@@ -1,0 +1,47 @@
+[
+  {
+    "term": "información",
+    "text": "La información es un concepto abstracto que se refiere a lo que tiene el poder de informar. A nivel más fundamental, la información concierne a la interpretación de lo que puede ser percibido, o de sus abstracciones. Cualquier proceso natural que no sea completamente aleatorio y cualquier patrón observable en cualquier medio pueden considerarse como portadores de cierta cantidad de información. Mientras que las señales digitales y otros datos utilizan signos discretos para transmitir información, otros fenómenos y artefactos como las señales analógicas, los poemas, las imágenes, la música u otros sonidos, y las corrientes transmiten información de una forma más continua. La información no es el conocimiento en sí, sino el significado que puede derivarse de una representación mediante la interpretación.",
+    "metadata": {
+      "id": "Q11028",
+      "title": "Información",
+      "lang": "es"
+    }
+  },
+  {
+    "term": "datos",
+    "text": "En el uso común y las estadísticas, los datos son una colección de valores discretos o continuos que transmiten información, describen la cantidad, la calidad, el hecho, las estadísticas, otras unidades de base de significado, o simplemente secuencias de símbolos que pueden ser interpretadas de manera formal. Un dato es un valor individual en una colección de datos. Los datos generalmente se organizan en estructuras como tablas que proporcionan un contexto y significado adicional, y que a su vez pueden usarse como datos en estructuras más grandes. Los datos pueden utilizarse como variables en un proceso computacional. Los datos pueden representar ideas abstractas o medidas concretas. Los datos se utilizan comúnmente en la investigación científica, la economía y en prácticamente todas las demás formas de actividad organizativa humana. Los ejemplos de conjuntos de datos incluyen índices de precios, tasas de desempleo, tasas de alfabetización y datos de censos. En este contexto, los datos representan hechos y cifras brutos que pueden ser utilizados de manera que se extraiga información útil de ellos.",
+    "metadata": {
+      "id": "Q42848",
+      "title": "Datos",
+      "lang": "es"
+    }
+  },
+  {
+    "term": "computadora",
+    "text": "Una computadora es una máquina que puede ser programada para realizar automáticamente secuencias de operaciones aritméticas o lógicas (cálculos). Las computadoras digitales electrónicas modernas pueden realizar conjuntos genéricos de operaciones conocidas como programas. Estos programas permiten a las computadoras realizar una amplia gama de tareas. Un sistema de computadora es una computadora en principio completa que incluye el hardware, el sistema operativo y los dispositivos periféricos necesarios y utilizados para su funcionamiento completo. Este término también puede referirse a un grupo de computadoras que están vinculadas y funcionan juntas, como una red de computadoras o un grupo de computadoras.",
+    "metadata": {
+      "id": "Q68",
+      "title": "Computadora",
+      "lang": "es"
+    }
+  },
+  {
+    "term": "tecnología",
+    "text": "La tecnología es la aplicación de los conocimientos para lograr objetivos prácticos de manera reproducible. La palabra tecnología también puede significar los productos resultantes de estos esfuerzos, incluyendo herramientas tangibles como utensilios o máquinas, e intangibles como software. La tecnología juega un papel crítico en la ciencia, la ingeniería y la vida cotidiana.",
+    "metadata": {
+      "id": "Q11016",
+      "title": "Tecnología",
+      "lang": "es"
+    }
+  },
+  {
+    "term": "somatología",
+    "text": "La antropología biológica, también conocida como antropología física, es una disciplina científica que se interesa en los aspectos biológicos y comportamentales de los seres humanos, sus ancestros homininos extintos y primates no humanos relacionados, especialmente desde un punto de vista evolutivo. Este subcampo de la antropología estudia sistemáticamente a los seres humanos desde un punto de vista biológico.",
+    "metadata": {
+      "id": "Q27172",
+      "title": "Antropología biológica",
+      "lang": "es"
+    }
+  }
+]

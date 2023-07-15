@@ -31,7 +31,7 @@ export interface StemmedState {
   m?: any // metadata
 }
 
-export const RE_WORD_SPLITTER = /[.,\/#!$%\^&\*;:{}=\-_~()’´`′\']/g
+export const RE_WORD_SPLITTER = /[.,\/#!$%\^&\*;:{}=\-_~()’´`′\'。、]/g
 
 export class SearchEngine {
   index: Record<string, Record<string, number>>
