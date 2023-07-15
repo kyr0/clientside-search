@@ -1,6 +1,6 @@
 {
   "name": "clientside-search",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -64,6 +64,11 @@
       "require": "./dist/de.cjs.js",
       "import": "./dist/de.esm.js",
       "types": "./dist/de.esm.d.ts"
+    },
+    "./fr": {
+      "require": "./dist/fr.cjs.js",
+      "import": "./dist/fr.esm.js",
+      "types": "./dist/fr.esm.d.ts"
     },
     "./phonetic": {
       "require": "./dist/phonetic.cjs.js",
