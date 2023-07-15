@@ -1,12 +1,12 @@
 {
   "name": "clientside-search",
-  "version": "1.3.2",
+  "version": "1.4.0",
   "type": "module",
   "publishConfig": {
     "access": "public"
   },
   "license": "MIT",
-  "description": "A highly efficient, full-featured, multilingual text search engine library, providing full-text search, fuzzy matching, document indexing and more, with state hydration/dehydration functionality for easy persistence.",
+  "description": "A highly efficient, isomorphic, full-featured, multilingual text search engine library, providing full-text search, fuzzy matching, phonetic scoring, document indexing and more, with micro JSON state hydration/dehydration in-browser and server-side.",
   "keywords": [
     "search-engine",
     "full-text-search",
