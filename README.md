@@ -36,7 +36,7 @@ This search engine uses several advanced algorithms to provide robust and effici
 - ✅ _Phonetic Scoring_: Uses language-specific phonetic algorithms such as Double Metaphone and Koelner Phonetik as a tie breaker when Damerau-Levenshtein Distance is equal for two matches.
 - ✅ _Document ID Generation_: Generates a unique ID for each document based on its text.
 - ✅ _Automatic Stop Word selection_: Selects the best default stop words per language supported.
-- ✅ Currently supports only: `en`, `de`
+- ✅ Currently supports only: `en`, `de`, `fr`
 - ✅ Supports UTF8
 - ✅ Available as a simple API
 - ✅ Just `4.73 KiB` nano sized (ESM, gizpped, base library)

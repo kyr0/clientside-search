@@ -20,6 +20,7 @@ export class BM25 {
     let totalLength = this.averageLength * (this.documents.size - 1)
     totalLength += doc.length
     this.averageLength = totalLength / this.documents.size
+
     doc.forEach((term) => {
       this.docFrequency.set(term, (this.docFrequency.get(term) || 0) + 1)
       let termFreq = this.termFrequency.get(term)

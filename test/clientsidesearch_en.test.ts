@@ -6,7 +6,7 @@ import prettyBytes from 'pretty-bytes'
 
 const wikipediaArticles = JSON.parse(readFileSync('./wikipediaArticles.json', 'utf8'))
 
-describe('SearchEngine', () => {
+describe('SearchEngine en', () => {
   let searchEngine: SearchEngine
 
   beforeEach(() => {

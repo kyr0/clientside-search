@@ -32,7 +32,6 @@
     "type": "git"
   },
   "scripts": {
-    "pretest": "yarn build --dev",
     "test": "NODE_OPTIONS='--experimental-vm-modules --enable-source-maps --no-warnings' jest --verbose --coverage ./test/*.test.ts ./test/**/*.test.ts",
     "clean": "rm -rf ./dist && rm -rf ./coverage",
     "prebuild": "yarn clean",

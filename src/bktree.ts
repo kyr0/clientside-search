@@ -10,25 +10,6 @@ export class BKTreeNode {
     this.children = new Map<number, BKTreeNode>()
     this.count = count
   }
-
-  toJSON() {
-    return {
-      count: this.count,
-      word: this.word,
-      children: Array.from(this.children.entries()),
-    }
-  }
-
-  static fromJSON(json: any) {
-    const node = new BKTreeNode(json.word, json.count)
-    json.children.forEach((value: [number, any]) => {
-      if (Array.isArray(value) && value.length === 2) {
-        const [key, child]: [number, any] = value
-        node.children.set(key, BKTreeNode.fromJSON(child))
-      }
-    })
-    return node
-  }
 }
 
 export class BKTree {
@@ -51,7 +32,7 @@ export class BKTree {
   _insert(word: string, node: BKTreeNode) {
     const distance = damerauLevenshteinDistance(word, node.word, this.distanceCache)
     if (distance === 0) {
-      node.count++ // Increment count for the existing word
+      node.count++
     } else if (!node.children.has(distance)) {
       node.children.set(distance, new BKTreeNode(word))
     } else {
@@ -72,7 +53,7 @@ export class BKTree {
         if (node.children.size === 0) {
           return null
         } else {
-          // Keep the structure of the subtree.
+          // keep the structure of the subtree
           const entries = Array.from(node.children.entries())
           const [, firstChild] = entries[0]
           const newRoot = firstChild

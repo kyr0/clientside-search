@@ -1,0 +1,156 @@
+[
+  {
+    "term": "information",
+    "text": "L'information est un concept abstrait qui se réfère à ce qui a le pouvoir d'informer. Au niveau le plus fondamental, l'information concerne l'interprétation de ce qui peut être perçu, ou de leurs abstractions. Tout processus naturel qui n'est pas complètement aléatoire et tout motif observable dans n'importe quel médium peuvent être considérés comme véhiculant une certaine quantité d'information. Alors que les signaux numériques et autres données utilisent des signes discrets pour véhiculer l'information, d'autres phénomènes et artefacts tels que les signaux analogiques, les poèmes, les images, la musique ou d'autres sons, et les courants véhiculent de l'information sous une forme plus continue. L'information n'est pas le savoir lui-même, mais le sens qui peut être dérivé d'une représentation par l'interprétation.",
+    "metadata": {
+      "id": "Q11028",
+      "title": "Information",
+      "lang": "fr"
+    }
+  },
+  {
+    "term": "données",
+    "text": "Dans l'usage commun et les statistiques, les données sont une collection de valeurs discrètes ou continues qui véhiculent de l'information, décrivant la quantité, la qualité, le fait, les statistiques, d'autres unités de base de signification, ou simplement des séquences de symboles qui peuvent être interprétées de manière formelle. Un datum est une valeur individuelle dans une collection de données. Les données sont généralement organisées en structures telles que des tables qui fournissent un contexte et une signification supplémentaires, et qui peuvent elles-mêmes être utilisées comme des données dans des structures plus grandes. Les données peuvent être utilisées comme variables dans un processus computationnel. Les données peuvent représenter des idées abstraites ou des mesures concrètes. Les données sont couramment utilisées dans la recherche scientifique, l'économie, et dans pratiquement toutes les autres formes d'activité organisationnelle humaine. Les exemples de jeux de données comprennent les indices de prix, les taux de chômage, les taux d'alphabétisation et les données de recensement. Dans ce contexte, les données représentent les faits et chiffres bruts qui peuvent être utilisés de manière à en extraire l'information utile.",
+    "metadata": {
+      "id": "Q42848",
+      "title": "Données",
+      "lang": "fr"
+    }
+  },
+  {
+    "term": "ordinateur",
+    "text": "Un ordinateur est une machine qui peut être programmée pour effectuer automatiquement des séquences d'opérations arithmétiques ou logiques (calcul). Les ordinateurs électroniques numériques modernes peuvent effectuer des ensembles génériques d'opérations connus sous le nom de programmes. Ces programmes permettent aux ordinateurs d'effectuer une large gamme de tâches. Un système informatique est un ordinateur en principe complet qui comprend le matériel, le système d'exploitation et les équipements périphériques nécessaires et utilisés pour un fonctionnement complet. Ce terme peut également se référer à un groupe d'ordinateurs qui sont liés et fonctionnent ensemble, comme un réseau d'ordinateurs ou un cluster d'ordinateurs.",
+    "metadata": {
+      "id": "Q68",
+      "title": "Ordinateur",
+      "lang": "fr"
+    }
+  },
+  {
+    "term": "technologie",
+    "text": "La technologie est l'application des connaissances pour atteindre des objectifs pratiques de manière reproductible. Le mot technologie peut également signifier les produits résultant de ces efforts, y compris les outils tangibles tels que les ustensiles ou les machines, et les intangibles tels que les logiciels. La technologie joue un rôle critique dans la science, l'ingénierie et la vie quotidienne.",
+    "metadata": {
+      "id": "Q11016",
+      "title": "Technologie",
+      "lang": "fr"
+    }
+  },
+  {
+    "term": "somatologie",
+    "text": "L'anthropologie biologique, également connue sous le nom d'anthropologie physique, est une discipline scientifique qui s'intéresse aux aspects biologiques et comportementaux des êtres humains, à leurs ancêtres hominins éteints et aux primates non humains apparentés, en particulier d'un point de vue évolutif. Ce sous-domaine de l'anthropologie étudie systématiquement les êtres humains d'un point de vue biologique.",
+    "metadata": {
+      "id": "Q27172",
+      "title": "Anthropologie biologique",
+      "lang": "fr"
+    }
+  },
+  {
+    "term": "sociologie",
+    "text": "\n\nLa sociologie est une science sociale qui se concentre sur la société, le comportement social humain, les modèles de relations sociales, l'interaction sociale et les aspects de la culture associés à la vie quotidienne. En termes simples, la sociologie est l'étude scientifique de la société. Elle utilise diverses méthodes d'enquête empirique et d'analyse critique pour développer un corps de connaissances sur l'ordre social et le changement social. Alors que certains sociologues mènent des recherches qui peuvent être directement appliquées à la politique sociale et au bien-être, d'autres se concentrent principalement sur l'affinement de la compréhension théorique des processus sociaux et de la méthode phénoménologique. Le sujet peut varier de l'analyse micro-niveau de la société à l'analyse macro-niveau.",
+    "metadata": {
+      "id": "Q21201",
+      "title": "Sociologie",
+      "lang": "fr"
+    }
+  },
+
+  {
+    "term": "psychologie",
+    "text": "La psychologie est l'étude de l'esprit et du comportement chez les humains et les non-humains. La psychologie comprend l'étude des phénomènes conscients et inconscients, y compris les sentiments et les pensées. C'est une discipline académique d'une immense portée, qui franchit les frontières entre les sciences naturelles et sociales. Les psychologues cherchent à comprendre les propriétés émergentes des cerveaux, reliant la discipline à la neuroscience. En tant que scientifiques sociaux, les psychologues visent à comprendre le comportement des individus et des groupes.",
+    "metadata": {
+      "id": "Q9418",
+      "title": "Psychologie",
+      "lang": "fr"
+    }
+  },
+  {
+    "term": "anatomie",
+    "text": "L'anatomie est la branche de la biologie qui s'occupe de l'étude de la structure des organismes et de leurs parties. L'anatomie est une branche des sciences naturelles qui traite de l'organisation structurelle des êtres vivants. C'est une science ancienne, dont les débuts remontent à la préhistoire. L'anatomie est intrinsèquement liée à la biologie du développement, à l'embryologie, à l'anatomie comparée, à la biologie évolutive, et à la phylogénie, car ce sont les processus par lesquels l'anatomie est générée, à la fois sur des échelles de temps immédiates et à long terme. L'anatomie et la physiologie, qui étudient respectivement la structure et la fonction des organismes et de leurs parties, constituent un couple naturel de disciplines connexes, et sont souvent étudiées ensemble. L'anatomie humaine est l'une des sciences de base essentielles appliquées en médecine.",
+    "metadata": {
+      "id": "Q514",
+      "title": "Anatomie",
+      "lang": "fr"
+    }
+  },
+  {
+    "term": "physiologie",
+    "text": "La physiologie est l'étude scientifique des fonctions et des mécanismes dans un système vivant. En tant que sous-discipline de la biologie, la physiologie se concentre sur la manière dont les organismes, les systèmes d'organes, les organes individuels, les cellules et les biomolécules accomplissent les fonctions chimiques et physiques dans un système vivant. Selon les classes d'organismes, le domaine peut être divisé en physiologie médicale, physiologie animale, physiologie végétale, physiologie cellulaire et physiologie comparée.",
+    "metadata": {
+      "id": "Q521",
+      "title": "Physiologie",
+      "lang": "fr"
+    }
+  },
+  {
+    "term": "médecine",
+    "text": "La médecine est la science et la pratique de soigner un patient, de gérer le diagnostic, le pronostic, la prévention, le traitement, la palliation de leur blessure ou maladie, et de promouvoir leur santé. La médecine englobe une variété de pratiques de soins de santé évoluées pour maintenir et restaurer la santé par la prévention et le traitement de la maladie. La médecine contemporaine applique les sciences biomédicales, la recherche biomédicale, la génétique et la technologie médicale pour diagnostiquer, traiter et prévenir les blessures et les maladies, généralement par le biais de médicaments ou de chirurgie, mais aussi par des thérapies aussi diverses que la psychothérapie, les attelles et la traction externes, les dispositifs médicaux, les produits biologiques, et les radiations ionisantes, entre autres.",
+    "metadata": {
+      "id": "Q11190",
+      "title": "Médecine",
+      "lang": "fr"
+    }
+  },
+  {
+    "term": "santé",
+    "text": "Dans l'usage courant et en médecine, la santé, selon l'Organisation mondiale de la santé, est \"un état de bien-être physique, mental et social complet et non seulement l'absence de maladie et d'infirmité\". Une variété de définitions ont été utilisées pour différentes fins au fil du temps. La santé peut être promue en encourageant des activités bénéfiques pour la santé, comme l'exercice physique régulier et un sommeil adéquat, et en réduisant ou en évitant des activités ou des situations nocives pour la santé, comme le tabagisme ou le stress excessif. Certains facteurs affectant la santé sont dus à des choix individuels, comme la décision de s'engager dans un comportement à haut risque, tandis que d'autres sont dus à des causes structurelles, comme la façon dont la société est organisée qui rend plus facile ou plus difficile pour les gens d'obtenir les services de soins de santé nécessaires. D'autres facteurs encore sont au-delà des choix individuels et de groupe, comme les troubles génétiques.",
+    "metadata": {
+      "id": "Q12147",
+      "title": "Santé",
+      "lang": "fr"
+    }
+  },
+  {
+    "term": "maladie",
+    "text": "Une maladie est une condition anormale particulière qui affecte négativement la structure ou la fonction de tout ou partie d'un organisme, et qui n'est pas immédiatement due à une blessure externe. Les maladies sont souvent connues pour être des conditions médicales associées à des signes et symptômes spécifiques. Une maladie peut être causée par des facteurs externes tels que des pathogènes ou par des dysfonctionnements internes. Par exemple, des dysfonctionnements internes du système immunitaire peuvent produire une variété de maladies différentes, y compris diverses formes d'immunodéficience, d'hypersensibilité, d'allergies et de troubles auto-immuns.",
+    "metadata": {
+      "id": "Q12136",
+      "title": "Maladie",
+      "lang": "fr"
+    }
+  },
+  {
+    "term": "atome",
+    "text": "Un atome est une particule composée d'un noyau de protons et de neutrons entouré d'un nuage d'électrons. L'atome est la particule de base des éléments chimiques, et les éléments chimiques se distinguent les uns des autres par le nombre de protons présents dans leurs atomes. Par exemple, tout atome contenant 11 protons est du sodium, et tout atome contenant 29 protons est du cuivre. Le nombre de neutrons définit l'isotope de l'élément.",
+    "metadata": {
+      "id": "Q9121",
+      "title": "Atome",
+      "lang": "fr"
+    }
+  },
+  {
+    "term": "particule",
+    "text": "En sciences physiques, une particule est un petit objet localisé qui peut être décrit par plusieurs propriétés physiques ou chimiques, comme le volume, la densité ou la masse. Elles varient considérablement en taille ou en quantité, des particules subatomiques comme l'électron, aux particules microscopiques comme les atomes et les molécules, jusqu'aux particules macroscopiques comme les poudres et autres matériaux granulaires. Les particules peuvent également être utilisées pour créer des modèles scientifiques d'objets encore plus grands en fonction de leur densité, tels que les humains se déplaçant dans une foule ou les corps célestes en mouvement.",
+    "metadata": {
+      "id": "Q1621273",
+      "title": "Particule",
+      "lang": "fr"
+    }
+  },
+  {
+    "term": "quantum",
+    "text": "En physique, un quantum est la quantité minimale de toute entité physique impliquée dans une interaction. La notion fondamentale qu'une propriété physique peut être « quantifiée » est appelée « l'hypothèse de quantification ». Cela signifie que la magnitude de la propriété physique ne peut prendre que des valeurs discrètes composées de multiples entiers d'un quantum.",
+    "metadata": {
+      "id": "Q46344",
+      "title": "Quantum",
+      "lang": "fr"
+    }
+  },
+  {
+    "term": "physique",
+    "text": "La physique est la science naturelle de la matière, impliquant l'étude de la matière, de ses constituants fondamentaux, de son mouvement et de son comportement dans l'espace et le temps, ainsi que des entités associées d'énergie et de force. La physique est l'une des disciplines scientifiques les plus fondamentales, avec pour principal objectif de comprendre comment l'univers se comporte. Un scientifique spécialisé dans le domaine de la physique est appelé un physicien.",
+    "metadata": {
+      "id": "Q413",
+      "title": "Physique",
+      "lang": "fr"
+    }
+  },
+  {
+    "term": "chimie",
+    "text": "La chimie est l'étude scientifique des propriétés et du comportement de la matière. C'est une science physique des sciences naturelles qui couvre les éléments qui composent la matière jusqu'aux composés faits d'atomes, de molécules et d'ions : leur composition, structure, propriétés, comportement et les changements qu'ils subissent lors d'une réaction avec d'autres substances. La chimie aborde également la nature des liaisons chimiques dans les composés chimiques.",
+    "metadata": {
+      "id": "Q2329",
+      "title": "Chimie",
+      "lang": "fr"
+    }
+  }
+]

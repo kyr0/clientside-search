@@ -108,7 +108,7 @@ export class SearchEngine {
 
   processText(text: string): string[] {
     const words = []
-    const rawWords = text.replace(/[.,!?;:\-]/g, ' ').split(' ')
+    const rawWords = text.replace(/[.,!?;:’´`′\'\-]/g, ' ').split(' ')
 
     for (const rawWord of rawWords) {
       const word = rawWord.trim().toLowerCase()
@@ -130,7 +130,6 @@ export class SearchEngine {
         this.index[word] = {}
       }
 
-      // Store computed tfidf value in local cache
       if (!tfidfCache[word]) {
         tfidfCache[word] = this.vectorizer.tfidf(word, docId)
       }
@@ -252,7 +251,7 @@ export class SearchEngine {
     return similarWords.sort((a, b) => a.distance - b.distance).map((similarWord) => similarWord)
   }
 
-  // a variation of Daniel J. Bernstein (djb) string hash function
+  // a variation of Daniel J. Bernstein string hash function (djb2)
   generateId(text: string) {
     let hash = 0
     for (let i = 0; i < text.length; i++) {
@@ -324,7 +323,7 @@ export const damerauLevenshteinDistance = (s1: string, s2: string, distanceCache
     }
   }
 
-  // Store the calculated distance in the cache
+  // store the calculated distance in the cache
   distanceCache.get(s1).set(s2, dp[s1.length][s2.length])
 
   return dp[s1.length][s2.length]
