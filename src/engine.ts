@@ -11,7 +11,10 @@ export interface Document {
 export interface LanguageSupport {
   iso2Language: Iso2LanguageKey
   stem: (word: string) => string
-  stopwords: string[]
+  stopwords: Array<string>
+  diacritics: Array<string>
+  tokenizer: (text: string) => Array<string>
+  isLogograhic?: boolean
 }
 
 export type Iso2LanguageKey = string
@@ -31,7 +34,10 @@ export interface StemmedState {
   m?: any // metadata
 }
 
-export const RE_WORD_SPLITTER = /[.,\/#!$%\^&\*;:{}=\-_~()’´`′\'。、]/g
+export interface SimilarWord {
+  word: string
+  distance: number
+}
 
 export class SearchEngine {
   index: Record<string, Record<string, number>>
@@ -110,7 +116,16 @@ export class SearchEngine {
 
   processText(text: string): string[] {
     const words = []
-    const rawWords = text.replace(RE_WORD_SPLITTER, ' ').split(' ')
+    const rawWords = this.language.tokenizer(text)
+
+    // Japanese and Chinese don't have stopwords
+    // nor does the typical character-based approach work for them
+    // the simple tokenization is a sliding window multigram approach
+    // based evidence gathered from resarch on average word length
+    // as there is also no stemming and upper/lower-case, we can early return here
+    if (this.language.isLogograhic) {
+      return rawWords
+    }
 
     for (const rawWord of rawWords) {
       const word = rawWord.trim().toLowerCase()
@@ -120,6 +135,7 @@ export class SearchEngine {
     }
     return words
   }
+
   addDocumentStemmed(words: string[], docId: number, metadata: any = {}) {
     this.bm25.addDocument(words, docId)
     this.vectorizer.addDocument(docId, words)
@@ -177,8 +193,8 @@ export class SearchEngine {
     const bm25ScoresCache: Record<string, any> = {}
 
     terms.some((term) => {
-      const similarWords = this.getSimilarWords(term)
-      similarWords.forEach((similarWord, index) => {
+      const similarWords = this.language.isLogograhic ? [{ word: term, distance: 0 }] : this.getSimilarWords(term)
+      similarWords.forEach((similarWord: SimilarWord, index: number) => {
         const docIds = this.index[similarWord.word] || {}
         Object.keys(docIds).forEach((docId) => {
           seenDocIds.add(docId)
@@ -215,7 +231,7 @@ export class SearchEngine {
       return false
     })
 
-    // Combine the scores with weights, giving higher weight to exact matches
+    // combine the scores with weights, giving higher weight to exact matches
     const scores = Array.from(seenDocIds).reduce((acc: Record<string, number>, docId) => {
       acc[docId] = (exactScores[docId] || 0) * 1.2 + (fuzzyScores[docId] || 0)
 
@@ -241,13 +257,7 @@ export class SearchEngine {
     }))
   }
 
-  getSimilarWords(
-    word: string,
-    maxDistance: number = 2,
-  ): Array<{
-    word: string
-    distance: number
-  }> {
+  getSimilarWords(word: string, maxDistance: number = 2): Array<SimilarWord> {
     const similarWords = this.bkTree.search(word, maxDistance)
     // sort the similar words by their distance and map to an array of words
     return similarWords.sort((a, b) => a.distance - b.distance).map((similarWord) => similarWord)

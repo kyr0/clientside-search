@@ -114,7 +114,16 @@ describe('SearchEngine en', () => {
   })
 
   test('should properly boost scores for documents with query terms in the title', () => {
-    const searchEngine = new SearchEngine({ iso2Language: 'en', stopwords: [], stem: (word: string) => word }, [1, 1])
+    const searchEngine = new SearchEngine(
+      {
+        diacritics: language.diacritics,
+        tokenizer: language.tokenizer,
+        iso2Language: 'en',
+        stopwords: [],
+        stem: (word: string) => word,
+      },
+      [1, 1],
+    )
     searchEngine.addDocument('test document', { index_title: 'test title' })
     searchEngine.addDocument('another test document', { index_title: 'irrelevant title' })
 

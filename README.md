@@ -36,7 +36,7 @@ This search engine uses several advanced algorithms to provide robust and effici
 - ✅ _Phonetic Scoring_: Uses language-specific phonetic algorithms such as Double Metaphone and Koelner Phonetik as a tie breaker when Damerau-Levenshtein Distance is equal for two matches.
 - ✅ _Document ID Generation_: Generates a unique ID for each document based on its text.
 - ✅ _Automatic Stop Word selection_: Selects the best default stop words per language supported.
-- ✅ Currently supports only: `en`, `de`, `fr`, `es`
+- ✅ Currently supports only: `en`, `de`, `fr`, `es`, `ja`
 - ✅ Supports UTF8
 - ✅ Available as a simple API
 - ✅ Just `8 KiB` nano sized (ESM, gizpped, base library)
@@ -109,10 +109,6 @@ const { en } = require('clientside-search/en.cjs')
 <h3 align="center">Roadmap</h3>
 
 - Advanced Asian language support:
-  - Support for _Japanese_ using Kuromoji morphological analyzer
-    - No BKTree, but N-gram comparison
-    - TF-IDF
-    - Disable stemming
   - Support for _Chinese_ using Jieba
     - No BKTree, but N-gram comparison
     - Character-based TF-IDF

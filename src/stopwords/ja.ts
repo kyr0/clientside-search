@@ -1,5 +1,5 @@
 // experimental
-export const DEFAULT_STOPWORDS_JP = [
+export const DEFAULT_STOPWORDS_JA = [
   'は',
   'の',
   'が',

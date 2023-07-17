@@ -127,7 +127,16 @@ describe('SearchEngine es', () => {
   })
 
   test('debería ponderar adecuadamente las puntuaciones para los documentos con términos de búsqueda más frecuentes', () => {
-    const searchEngine = new SearchEngine({ iso2Language: 'es', stopwords: [], stem: (word: string) => word }, [1, 1])
+    const searchEngine = new SearchEngine(
+      {
+        diacritics: language.diacritics,
+        tokenizer: language.tokenizer,
+        iso2Language: 'es',
+        stopwords: [],
+        stem: (word: string) => word,
+      },
+      [1, 1],
+    )
     searchEngine.addDocument('Este es un documento de prueba. Prueba de búsqueda.')
     searchEngine.addDocument('Este es otro documento de prueba.')
 

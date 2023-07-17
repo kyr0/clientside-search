@@ -1,6 +1,6 @@
 {
   "name": "clientside-search",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -15,6 +15,8 @@
     "fuzzy-matching",
     "multilingual",
     "BM25",
+    "n-gram",
+    "multi-gram",
     "TF-IDF",
     "BK-Tree",
     "state-hydration",
@@ -75,10 +77,10 @@
       "import": "./dist/es.esm.js",
       "types": "./dist/es.esm.d.ts"
     },
-    "./jp": {
-      "require": "./dist/jp.cjs.js",
-      "import": "./dist/jp.esm.js",
-      "types": "./dist/jp.esm.d.ts"
+    "./ja": {
+      "require": "./dist/ja.cjs.js",
+      "import": "./dist/ja.esm.js",
+      "types": "./dist/ja.esm.d.ts"
     },
     "./phonetic": {
       "require": "./dist/phonetic.cjs.js",

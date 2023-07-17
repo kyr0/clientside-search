@@ -45,10 +45,10 @@ await buildForNode({
   },
 })
 
-// experimental
+// experimental, Japanese
 await buildForNode({
-  entryPoint: './src/language/jp.ts',
-  outfile: './dist/jp.js',
+  entryPoint: './src/language/ja.ts',
+  outfile: './dist/ja.js',
   debug: process.argv.indexOf('--dev') > -1,
   esBuildOptions: {
     logLevel: 'error',

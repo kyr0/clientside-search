@@ -70,4 +70,16 @@ describe('Language Detection', () => {
     const language = detectLanguage(text)
     expect(language).toBe('en')
   })
+
+  test('returns language with the most stopwords in multi-lingual case including Spanish', () => {
+    const text = 'The fox, El rápido zorro marrón salta sobre el perro perezoso.'
+    const language = detectLanguage(text)
+    expect(language).toBe('es')
+  })
+
+  test('returns language with the most stopwords in multi-lingual case including Japanese', () => {
+    const text = '急いで茶色のキツネが怠け者の犬の上を飛び越えます。'
+    const language = detectLanguage(text)
+    expect(language).toBe('ja')
+  })
 })
