@@ -25,8 +25,6 @@ export interface LanguageStopwords {
 
 export const DEFAULT_LANGUAGE: Iso2LanguageKey = 'en'
 
-export type Language = 'en' | 'de'
-
 export type DistanceCache = Map<string, Map<string, number>>
 
 export interface StemmedState {
