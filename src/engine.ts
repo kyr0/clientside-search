@@ -127,6 +127,18 @@ export class SearchEngine {
 
     for (const rawWord of rawWords) {
       const word = rawWord.trim().toLowerCase()
+
+      // we want to index words that are combined with "-" both as separate words
+      // and as combined words, to match both "e-mail", "email" and "e mail"
+      if (word.indexOf('-') > -1) {
+        const parts = word.split('-')
+        parts.forEach((part) => {
+          if (part !== '') {
+            words.push(this.getStemmedWord(part))
+          }
+        })
+      }
+
       if (word !== '' && !this.stopWords.has(word)) {
         words.push(this.getStemmedWord(word))
       }

@@ -133,4 +133,20 @@ describe('SearchEngine en', () => {
     expect(scores[0].metadata.index_title).toBe('test title')
     expect(scores[1].metadata.index_title).toBe('irrelevant title')
   })
+
+  test('should properly search and match technical text, such as @, $ etc. symbols', () => {
+    const searchEngine = new SearchEngine(language, [1, 1])
+    searchEngine.addDocument('test document: $foo = 123;', { id: 'test' })
+    searchEngine.addDocument('another test foo document @free', { id: 'test2' })
+
+    const scores = searchEngine.search('$foo')
+
+    expect(scores.length).toBe(2)
+    expect(scores[0].metadata.id).toBe('test')
+    expect(scores[1].metadata.id).toBe('test2')
+
+    const scores2 = searchEngine.search('@fre')
+    expect(scores2.length).toBe(1)
+    expect(scores2[0].metadata.id).toBe('test2')
+  })
 })

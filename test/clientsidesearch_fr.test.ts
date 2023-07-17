@@ -31,7 +31,7 @@ describe('SearchEngine fr', () => {
 
     // Assuming stem_en stemming function turns "jumps" into "jump"
     // 'the' and 'over' have been removed as they are stop words
-    const expectedText = ['renard', 'brun', 'saut', 'chien', 'paress']
+    const expectedText = ['renard', 'brun', 'saut', 'par', 'dessus', 'par-dessus', 'chien', 'paress']
 
     expect(processedText).toEqual(expectedText)
   })
@@ -86,7 +86,7 @@ describe('SearchEngine fr', () => {
     const result3 = hydratedEngine.search('✅')
 
     expect(result.length).toBe(1)
-    expect(result[0].metadata.debugStemmed).toEqual('renard brun saut clôtur ✅')
+    expect(result[0].metadata.debugStemmed).toEqual('renard brun saut par dessus par-dessus clôtur ✅')
     expect(result2.length).toBe(1)
     expect(result3.length).toBe(1)
   })

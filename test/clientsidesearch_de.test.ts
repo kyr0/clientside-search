@@ -57,8 +57,8 @@ describe('SearchEngine de', () => {
     const result = searchEngine.search('Test')
     expect(result.length).toBeGreaterThanOrEqual(2)
 
-    expect(result[0]).toEqual({ id: doc2Id, score: 1.2252582925045064, metadata: {} })
-    expect(result[1]).toEqual({ id: doc3Id, score: 0.8047083549318192, metadata: {} })
+    expect(result[0]).toEqual({ id: doc2Id, score: 1.242705784346901, metadata: {} })
+    expect(result[1]).toEqual({ id: doc3Id, score: 0.7460213369164914, metadata: {} })
   })
 
   test('should remove a document correctly', () => {
