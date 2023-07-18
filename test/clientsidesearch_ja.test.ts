@@ -280,4 +280,20 @@ describe('SearchEngine ja', () => {
     expect(scores[0].metadata.index_title).toBe('テストタイトル')
     expect(scores[1].metadata.index_title).toBe('無関係なタイトル')
   })
+
+  test('should properly search and match technical text, such as @, $ etc. symbols', () => {
+    const searchEngine = new SearchEngine(language)
+    searchEngine.addDocument('テストドキュメント：$foo = 123;', { id: 'テスト' })
+    searchEngine.addDocument('もう一つのテスト foo ドキュメント @無料', { id: 'テスト2' })
+
+    const scores = searchEngine.search('$foo')
+
+    expect(scores.length).toBe(2)
+    expect(scores[0].metadata.id).toBe('テスト')
+    expect(scores[1].metadata.id).toBe('テスト2')
+
+    const scores2 = searchEngine.search('@無料')
+    expect(scores2.length).toBe(1)
+    expect(scores2[0].metadata.id).toBe('テスト2')
+  })
 })
