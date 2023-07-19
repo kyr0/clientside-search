@@ -58,16 +58,16 @@ describe('SearchEngine de', () => {
     expect(result.length).toEqual(3)
 
     expect(result[0]).toEqual({
+      id: doc2Id,
+      score: 1,
+      primary_score_reason: 'exact',
+      metadata: { doc2: true },
+    })
+    expect(result[1]).toEqual({
       id: doc3Id,
       score: 1,
       primary_score_reason: 'exact',
       metadata: { doc3: true },
-    })
-    expect(result[1]).toEqual({
-      id: doc2Id,
-      score: 0.7998255794463998,
-      primary_score_reason: 'exact',
-      metadata: { doc2: true },
     })
     expect(result[2]).toEqual({ id: doc1Id, score: 0, primary_score_reason: 'partial', metadata: { doc1: true } })
   })
@@ -172,7 +172,7 @@ describe('SearchEngine de', () => {
     expect(scores[1].metadata.index_title).toBe('Irrelevanter Titel')
   })
 
-  test('rasenmäher', () => {
+  test('matches combined words', () => {
     const searchEngine = new SearchEngine(language)
 
     searchEngine.addDocument('Rasenmäher', { id: 'rasenmäher' })
@@ -180,16 +180,21 @@ describe('SearchEngine de', () => {
 
     const scores = searchEngine.search('rasenmäher')
 
-    console.log('rasenmäher', scores)
+    expect(scores.length).toBe(2)
+    expect(scores[0].metadata.id).toBe('rasenmäher')
+    expect(scores[1].metadata.id).toBe('rasenmähermesser')
 
     expect(scores[0].metadata.id).toBe('rasenmäher')
 
     const scores1 = searchEngine.search('rasenmaehermesser')
 
-    console.log('rasenmähermesse', scores1)
+    expect(scores1.length).toBe(1)
+    expect(scores1[0].metadata.id).toBe('rasenmähermesser')
 
     const scores2 = searchEngine.search('mäher')
 
-    console.log('scores2', scores2)
+    expect(scores2.length).toBe(2)
+    expect(scores2[0].metadata.id).toBe('rasenmäher')
+    expect(scores2[1].metadata.id).toBe('rasenmähermesser')
   })
 })

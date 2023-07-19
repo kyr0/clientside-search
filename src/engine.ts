@@ -194,7 +194,6 @@ export class SearchEngine {
 
     return this.addDocumentStemmed(words, docId, metadata)
   }
-
   search(query: string, topN: number = 10) {
     const terms = this.processText(query)
     const exactScores: Record<string, number> = {}
@@ -202,46 +201,32 @@ export class SearchEngine {
     const partialScores: Record<string, number> = {}
     const seenDocIds: Set<string> = new Set()
     const scoreReason: Record<string, any> = {}
-    const bm25ScoresCache: Record<string, any> = {}
+
+    const bm25ScoresCache: Record<string, any> = terms.reduce((cache, term) => {
+      cache[term] = this.bm25.getScores([term])
+      return cache
+    }, {})
 
     terms.some((term) => {
       const similarWords = this.language.isLogograhic ? [{ word: term, distance: 0 }] : this.getSimilarWords(term)
       similarWords.forEach((similarWord: SimilarWord, index: number) => {
         const docIds = this.index[similarWord.word] || {}
+        const bm25Score = bm25ScoresCache[term]
         Object.keys(docIds).forEach((docId) => {
           seenDocIds.add(docId)
 
-          // compute the score once and store it
-          if (!bm25ScoresCache[term]) {
-            bm25ScoresCache[term] = this.bm25.getScores([term])
-          }
+          scoreReason[docId] =
+            scoreReason[docId] ||
+            (similarWord.word === term ? 'exact' : similarWord.word.indexOf(term) > -1 ? 'partial' : 'fuzzy')
 
-          if (similarWord.word === term) {
-            if (!exactScores[docId]) {
-              exactScores[docId] = 0
-            }
-            if (!scoreReason[docId]) {
-              scoreReason[docId] = 'exact'
-            }
-            exactScores[docId] += 0.25 + bm25ScoresCache[term][docId]
-          } else if (similarWord.word.indexOf(term) > -1) {
-            if (!partialScores[docId]) {
-              partialScores[docId] = 0
-            }
-            if (!scoreReason[docId]) {
-              scoreReason[docId] = 'partial'
-            }
-            partialScores[docId] += 0.2 + bm25ScoresCache[term][docId]
+          if (scoreReason[docId] === 'exact') {
+            exactScores[docId] = (exactScores[docId] || 0) + 0.25 + bm25Score[docId]
+          } else if (scoreReason[docId] === 'partial') {
+            partialScores[docId] = (partialScores[docId] || 0) + 0.2 + bm25Score[docId]
           } else {
-            if (!fuzzyScores[docId]) {
-              fuzzyScores[docId] = 0
-            }
-            if (!scoreReason[docId]) {
-              scoreReason[docId] = 'fuzzy'
-            }
-
-            fuzzyScores[docId] +=
-              (0.125 + bm25ScoresCache[term][docId]) * (similarWord.distance ? 1 / similarWord.distance : 1)
+            fuzzyScores[docId] =
+              (fuzzyScores[docId] || 0) +
+              (0.125 + bm25Score[docId]) * (similarWord.distance ? 1 / similarWord.distance : 1)
 
             if (similarWords[index - 1] && similarWords[index - 1].distance === similarWord.distance) {
               fuzzyScores[docId] *= getPhoneticWeight(term, similarWord.word, this.language.iso2Language)
@@ -249,7 +234,6 @@ export class SearchEngine {
           }
         })
 
-        // early exit if the maximum number of results is reached
         if (seenDocIds.size >= topN) {
           return true
         }
@@ -257,33 +241,31 @@ export class SearchEngine {
       return false
     })
 
-    // combine the scores with weights, giving higher weight to exact matches
+    let minScore = Infinity,
+      maxScore = -Infinity
     const preScores = Array.from(seenDocIds).reduce((acc: Record<string, number>, docId) => {
-      acc[docId] = (exactScores[docId] || 0) * 1.2 + (partialScores[docId] || 0) * 1.1 + (fuzzyScores[docId] || 0)
-
-      if (this.stemmedMetadata[docId]?.index_title) {
-        terms.forEach((term) => {
-          if (this.stemmedMetadata[docId]?.index_title.includes(term)) {
-            acc[docId] *= 1.1
+      let score = (exactScores[docId] || 0) * 1.2 + (partialScores[docId] || 0) * 1.1 + (fuzzyScores[docId] || 0)
+      const stemmedMetadataTitle = this.stemmedMetadata[docId]?.index_title
+      if (stemmedMetadataTitle) {
+        for (let i = 0; i < terms.length; i++) {
+          if (stemmedMetadataTitle.includes(terms[i])) {
+            score *= 1.1
+            break
           }
-        })
+        }
       }
-
+      acc[docId] = score
+      minScore = Math.min(minScore, score)
+      maxScore = Math.max(maxScore, score)
       return acc
     }, {})
 
-    const logScores = Object.values(preScores)
-    const minScore = Math.min(...logScores)
-    const maxScore = Math.max(...logScores)
-    const range = maxScore - minScore || 1
-
     const scores = Object.keys(preScores).reduce((acc: Record<string, number>, docId) => {
-      const clampedScore = Math.max(minScore, Math.min(maxScore, preScores[docId]))
-      if (maxScore - minScore === 0) {
-        acc[docId] = 1 // all scores are the same, so return 1 for all
-      } else {
-        acc[docId] = (clampedScore - minScore) / (maxScore - minScore)
-      }
+      const score = preScores[docId]
+      acc[docId] =
+        maxScore - minScore === 0
+          ? 1
+          : (Math.max(minScore, Math.min(maxScore, score)) - minScore) / (maxScore - minScore)
       return acc
     }, {})
 

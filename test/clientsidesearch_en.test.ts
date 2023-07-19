@@ -418,7 +418,7 @@ describe('SearchEngine en', () => {
 
     data.forEach((item) => {
       searchEngine.addDocument(
-        `${item.name} ${item.aliases.join(' ')} ${item.tags.join(' ')}  ${item.styles.join(' ')} ${item.author}`,
+        `${item.name} ${item.aliases.join(' ')} ${item.tags.join(' ')}  ${item.styles.join(' ')}`,
         {
           index_title: item.name,
           id: item.id,
@@ -428,20 +428,25 @@ describe('SearchEngine en', () => {
 
     const scores = searchEngine.search('at')
 
-    console.log('scores at', scores)
-    expect(scores.length).toBe(6)
+    expect(scores.length).toBe(5)
+    expect(scores[0].metadata.index_title).toBe('at')
+    expect(scores[1].metadata.index_title).toBe('account-cowboy-hat-outline')
 
     const scores2 = searchEngine.search('cow')
-
-    console.log('scores2 cow', scores2)
+    expect(scores2.length).toBe(7)
+    expect(scores2[0].metadata.index_title).toBe('cow')
+    expect(scores2[1].metadata.index_title).toBe('cow-off')
+    expect(scores2[2].metadata.index_title).toBe('account-cowboy-hat-outline')
+    expect(scores2[3].metadata.index_title).toBe('account-cowboy-hat')
 
     const scores3 = searchEngine.search('cowboys')
-
-    console.log('scores cowboys', scores3)
+    expect(scores3.length).toBe(2)
+    expect(scores3[0].metadata.index_title).toBe('account-cowboy-hat')
+    expect(scores3[1].metadata.index_title).toBe('account-cowboy-hat-outline')
 
     const scores4 = searchEngine.search('boy')
-
-    console.log('scores boy', scores4, 'tokenized', searchEngine.processText('boy'))
-    //expect(scores.length).toBe(1)
+    expect(scores4.length).toBe(9)
+    expect(scores4[0].metadata.index_title).toBe('account-cowboy-hat-outline')
+    expect(scores4[1].metadata.index_title).toBe('account-cowboy-hat')
   })
 })
