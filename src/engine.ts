@@ -112,7 +112,7 @@ export class SearchEngine {
     return this.stemCache.get(word)
   }
 
-  processText(text: string): string[] {
+  processText(text: string): Array<string> {
     const words = []
     const rawWords = this.language.tokenizer(text)
 
@@ -199,7 +199,9 @@ export class SearchEngine {
     const terms = this.processText(query)
     const exactScores: Record<string, number> = {}
     const fuzzyScores: Record<string, number> = {}
+    const partialScores: Record<string, number> = {}
     const seenDocIds: Set<string> = new Set()
+    const scoreReason: Record<string, any> = {}
     const bm25ScoresCache: Record<string, any> = {}
 
     terms.some((term) => {
@@ -218,13 +220,28 @@ export class SearchEngine {
             if (!exactScores[docId]) {
               exactScores[docId] = 0
             }
+            if (!scoreReason[docId]) {
+              scoreReason[docId] = 'exact'
+            }
             exactScores[docId] += 0.25 + bm25ScoresCache[term][docId]
+          } else if (similarWord.word.indexOf(term) > -1) {
+            if (!partialScores[docId]) {
+              partialScores[docId] = 0
+            }
+            if (!scoreReason[docId]) {
+              scoreReason[docId] = 'partial'
+            }
+            partialScores[docId] += 0.2 + bm25ScoresCache[term][docId]
           } else {
             if (!fuzzyScores[docId]) {
               fuzzyScores[docId] = 0
             }
+            if (!scoreReason[docId]) {
+              scoreReason[docId] = 'fuzzy'
+            }
 
-            fuzzyScores[docId] += 0.125 + bm25ScoresCache[term][docId]
+            fuzzyScores[docId] +=
+              (0.125 + bm25ScoresCache[term][docId]) * (similarWord.distance ? 1 / similarWord.distance : 1)
 
             if (similarWords[index - 1] && similarWords[index - 1].distance === similarWord.distance) {
               fuzzyScores[docId] *= getPhoneticWeight(term, similarWord.word, this.language.iso2Language)
@@ -237,22 +254,36 @@ export class SearchEngine {
           return true
         }
       })
-
       return false
     })
 
     // combine the scores with weights, giving higher weight to exact matches
-    const scores = Array.from(seenDocIds).reduce((acc: Record<string, number>, docId) => {
-      acc[docId] = (exactScores[docId] || 0) * 1.2 + (fuzzyScores[docId] || 0)
+    const preScores = Array.from(seenDocIds).reduce((acc: Record<string, number>, docId) => {
+      acc[docId] = (exactScores[docId] || 0) * 1.2 + (partialScores[docId] || 0) * 1.1 + (fuzzyScores[docId] || 0)
 
       if (this.stemmedMetadata[docId]?.index_title) {
         terms.forEach((term) => {
           if (this.stemmedMetadata[docId]?.index_title.includes(term)) {
-            acc[docId] *= 2
+            acc[docId] *= 1.1
           }
         })
       }
 
+      return acc
+    }, {})
+
+    const logScores = Object.values(preScores)
+    const minScore = Math.min(...logScores)
+    const maxScore = Math.max(...logScores)
+    const range = maxScore - minScore || 1
+
+    const scores = Object.keys(preScores).reduce((acc: Record<string, number>, docId) => {
+      const clampedScore = Math.max(minScore, Math.min(maxScore, preScores[docId]))
+      if (maxScore - minScore === 0) {
+        acc[docId] = 1 // all scores are the same, so return 1 for all
+      } else {
+        acc[docId] = (clampedScore - minScore) / (maxScore - minScore)
+      }
       return acc
     }, {})
 
@@ -263,14 +294,23 @@ export class SearchEngine {
     return docIds.map((docId) => ({
       id: parseInt(docId, 10),
       metadata: this.docMetadata[docId],
+      primary_score_reason: scoreReason[docId],
       score: scores[docId],
     }))
   }
 
   getSimilarWords(word: string, maxDistance: number = 2): Array<SimilarWord> {
+    // when a word has a small length distance values can distord the results
+    // we need to clamp the max distance to subtract the word length, leaving a small ratio for mistypes
+    if (word.length <= maxDistance) {
+      maxDistance = maxDistance - word.length
+    }
+
     const similarWords = this.bkTree.search(word, maxDistance)
+    const similarPartials = this.bkTree.searchPartial(word, maxDistance)
+
     // sort the similar words by their distance and map to an array of words
-    return similarWords.sort((a, b) => a.distance - b.distance).map((similarWord) => similarWord)
+    return [...similarWords, ...similarPartials].sort((a, b) => a.distance - b.distance)
   }
 
   // a variation of Daniel J. Bernstein string hash function (djb2)

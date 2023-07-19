@@ -50,15 +50,26 @@ describe('SearchEngine de', () => {
     const doc1 = 'Das ist ein Testdokument.'
     const doc2 = 'In diesem Dokument gehts um Tests.'
     const doc3 = 'Das ist ein Test-Dokument.'
-    searchEngine.addDocument(doc1)
-    const doc2Id = searchEngine.addDocument(doc2)
-    const doc3Id = searchEngine.addDocument(doc3)
+    const doc1Id = searchEngine.addDocument(doc1, { doc1: true })
+    const doc2Id = searchEngine.addDocument(doc2, { doc2: true })
+    const doc3Id = searchEngine.addDocument(doc3, { doc3: true })
 
     const result = searchEngine.search('Test')
-    expect(result.length).toBeGreaterThanOrEqual(2)
+    expect(result.length).toEqual(3)
 
-    expect(result[0]).toEqual({ id: doc2Id, score: 1.242705784346901, metadata: {} })
-    expect(result[1]).toEqual({ id: doc3Id, score: 0.7460213369164914, metadata: {} })
+    expect(result[0]).toEqual({
+      id: doc3Id,
+      score: 1,
+      primary_score_reason: 'exact',
+      metadata: { doc3: true },
+    })
+    expect(result[1]).toEqual({
+      id: doc2Id,
+      score: 0.7998255794463998,
+      primary_score_reason: 'exact',
+      metadata: { doc2: true },
+    })
+    expect(result[2]).toEqual({ id: doc1Id, score: 0, primary_score_reason: 'partial', metadata: { doc1: true } })
   })
 
   test('should remove a document correctly', () => {
@@ -159,5 +170,26 @@ describe('SearchEngine de', () => {
     expect(scores[0].score).toBeGreaterThanOrEqual(scores[1].score)
     expect(scores[0].metadata.index_title).toBe('Test Titel')
     expect(scores[1].metadata.index_title).toBe('Irrelevanter Titel')
+  })
+
+  test('rasenmäher', () => {
+    const searchEngine = new SearchEngine(language)
+
+    searchEngine.addDocument('Rasenmäher', { id: 'rasenmäher' })
+    searchEngine.addDocument('Rasenmähermesser', { id: 'rasenmähermesser' })
+
+    const scores = searchEngine.search('rasenmäher')
+
+    console.log('rasenmäher', scores)
+
+    expect(scores[0].metadata.id).toBe('rasenmäher')
+
+    const scores1 = searchEngine.search('rasenmaehermesser')
+
+    console.log('rasenmähermesse', scores1)
+
+    const scores2 = searchEngine.search('mäher')
+
+    console.log('scores2', scores2)
   })
 })

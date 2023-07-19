@@ -39,6 +39,7 @@ export class BKTree {
       this._insert(word, node.children.get(distance) as BKTreeNode)
     }
   }
+
   remove(word: string) {
     if (this.root !== null) {
       this.root = this._remove(word, this.root)
@@ -101,6 +102,26 @@ export class BKTree {
       if (childDistance >= lowerBound && childDistance <= upperBound) {
         this._search(word, maxDistance, childNode, result)
       }
+    })
+  }
+
+  searchPartial(term: string, maxDistance: number) {
+    if (this.root === null) {
+      return []
+    } else {
+      const result: { word: string; distance: number }[] = []
+      this._searchPartial(term, maxDistance, this.root, result)
+      return result
+    }
+  }
+
+  _searchPartial(term: string, maxDistance: number, node: BKTreeNode, result: { word: string; distance: number }[]) {
+    if (node.word.indexOf(term) > -1) {
+      result.push({ word: node.word, distance: 0 })
+    }
+
+    node.children.forEach((childNode) => {
+      this._searchPartial(term, maxDistance, childNode, result)
     })
   }
 }

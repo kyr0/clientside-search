@@ -178,9 +178,24 @@ describe('SearchEngine ja', () => {
     expect(result.length).toEqual(3)
 
     // adapt score based on your implementation
-    expect(result[0]).toEqual({ id: doc1Id, score: 0.8999999999999999, metadata: { a: 1 } })
-    expect(result[1]).toEqual({ id: doc2Id, score: 0.8999999999999999, metadata: { b: 2 } })
-    expect(result[2]).toEqual({ id: doc3Id, score: 0.8999999999999999, metadata: { c: 3 } })
+    expect(result[0]).toEqual({
+      id: doc1Id,
+      score: 1,
+      primary_score_reason: 'exact',
+      metadata: { a: 1 },
+    })
+    expect(result[1]).toEqual({
+      id: doc2Id,
+      score: 1,
+      primary_score_reason: 'exact',
+      metadata: { b: 2 },
+    })
+    expect(result[2]).toEqual({
+      id: doc3Id,
+      score: 1,
+      primary_score_reason: 'exact',
+      metadata: { c: 3 },
+    })
   })
 
   test('should search for a longer query that partially matches, with lower score correctly', () => {
@@ -197,9 +212,14 @@ describe('SearchEngine ja', () => {
     expect(result.length).toEqual(3)
 
     // adapt score based on your implementation
-    expect(result[0]).toEqual({ id: doc2Id, score: 4.96738313739092, metadata: { b: 2 } })
-    expect(result[1]).toEqual({ id: doc1Id, score: 1.5, metadata: { a: 1 } })
-    expect(result[2]).toEqual({ id: doc3Id, score: 1.5, metadata: { c: 3 } })
+    expect(result[0]).toEqual({
+      id: doc2Id,
+      score: 1,
+      primary_score_reason: 'exact',
+      metadata: { b: 2 },
+    })
+    expect(result[1]).toEqual({ id: doc1Id, score: 0, primary_score_reason: 'exact', metadata: { a: 1 } })
+    expect(result[2]).toEqual({ id: doc3Id, score: 0, primary_score_reason: 'exact', metadata: { c: 3 } })
   })
 
   test('should remove a document correctly', () => {

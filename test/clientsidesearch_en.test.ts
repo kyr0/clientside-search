@@ -42,7 +42,12 @@ describe('SearchEngine en', () => {
 
     const result = searchEngine.search('test')
     expect(result.length).toBeGreaterThanOrEqual(1)
-    expect(result[0]).toEqual({ id: searchEngine.generateId(doc1), score: 0.3, metadata: {} })
+    expect(result[0]).toEqual({
+      id: searchEngine.generateId(doc1),
+      primary_score_reason: 'exact',
+      score: 1,
+      metadata: {},
+    })
   })
 
   test('should remove a document correctly', () => {
@@ -148,5 +153,295 @@ describe('SearchEngine en', () => {
     const scores2 = searchEngine.search('@fre')
     expect(scores2.length).toBe(1)
     expect(scores2[0].metadata.id).toBe('test2')
+  })
+
+  test('searching without stop words', () => {
+    const data = [
+      {
+        id: '73B211DB-05CF-4025-B035-AD03454C47A6',
+        baseIconId: '3AF49B97-A909-4961-9FBB-82C60D7CC773',
+        name: 'arrow-up-drop-circle',
+        codepoint: 'F0062',
+        aliases: ['arrow-top-drop-circle'],
+        styles: ['circle'],
+        version: '1.5.54',
+        deprecated: false,
+        tags: ['Arrow'],
+        author: 'Austin Andrews',
+      },
+      {
+        id: '42277E7D-D87A-4DE9-982B-37E6A8AE4E70',
+        baseIconId: '3AF49B97-A909-4961-9FBB-82C60D7CC773',
+        name: 'arrow-up-drop-circle-outline',
+        codepoint: 'F0063',
+        aliases: ['arrow-top-drop-circle-outline'],
+        styles: ['circle', 'outline'],
+        version: '1.5.54',
+        deprecated: false,
+        tags: ['Arrow'],
+        author: 'Austin Andrews',
+      },
+      {
+        id: '7FBBA0AD-B8E1-4C13-8BD7-B37D28135DD2',
+        baseIconId: '7FBBA0AD-B8E1-4C13-8BD7-B37D28135DD2',
+        name: 'arrow-up-left',
+        codepoint: 'F17BD',
+        aliases: [],
+        styles: [],
+        version: '6.1.95',
+        deprecated: false,
+        tags: [],
+        author: 'Colton Wiscombe',
+      },
+      {
+        id: 'DDA1FF1D-BD25-4698-8D9B-7F0E6B71C274',
+        baseIconId: '7FBBA0AD-B8E1-4C13-8BD7-B37D28135DD2',
+        name: 'arrow-up-left-bold',
+        codepoint: 'F17BE',
+        aliases: [],
+        styles: [],
+        version: '6.1.95',
+        deprecated: false,
+        tags: [],
+        author: 'Colton Wiscombe',
+      },
+      {
+        id: '5C5BEA1F-BAA5-4F6A-AE84-F3EAD16C936C',
+        baseIconId: '5C5BEA1F-BAA5-4F6A-AE84-F3EAD16C936C',
+        name: 'arrow-up-right',
+        codepoint: 'F17BF',
+        aliases: [],
+        styles: [],
+        version: '6.1.95',
+        deprecated: false,
+        tags: [],
+        author: 'Colton Wiscombe',
+      },
+      {
+        id: '491E8E53-19DC-4736-AA7F-F95AEB0F1696',
+        baseIconId: '5C5BEA1F-BAA5-4F6A-AE84-F3EAD16C936C',
+        name: 'arrow-up-right-bold',
+        codepoint: 'F17C0',
+        aliases: [],
+        styles: [],
+        version: '6.1.95',
+        deprecated: false,
+        tags: [],
+        author: 'Colton Wiscombe',
+      },
+      {
+        id: '4EDBF232-461F-4F4C-82BB-64A89BA08405',
+        baseIconId: '3AF49B97-A909-4961-9FBB-82C60D7CC773',
+        name: 'arrow-up-thick',
+        codepoint: 'F005E',
+        aliases: ['arrow-top-thick', 'arrow-up-bold', 'arrow-top-bold'],
+        styles: ['thick'],
+        version: '1.5.54',
+        deprecated: false,
+        tags: ['Arrow'],
+        author: 'Austin Andrews',
+      },
+      {
+        id: '62E619DA-599C-486F-AD85-9B5BAB4F5A92',
+        baseIconId: '3AF49B97-A909-4961-9FBB-82C60D7CC773',
+        name: 'arrow-up-thin',
+        codepoint: 'F19B2',
+        aliases: [],
+        styles: [],
+        version: '6.5.95',
+        deprecated: false,
+        tags: ['Arrow'],
+        author: 'Matt Stayner',
+      },
+      {
+        id: '9733F983-7DD1-4230-B792-413D46E0B422',
+        baseIconId: '3AF49B97-A909-4961-9FBB-82C60D7CC773',
+        name: 'arrow-up-thin-circle-outline',
+        codepoint: 'F1597',
+        aliases: [],
+        styles: [],
+        version: '5.5.55',
+        deprecated: false,
+        tags: ['Arrow'],
+        author: 'Google',
+      },
+      {
+        id: '8B00DF03-0754-4D7F-B0C9-8CF21D42989F',
+        baseIconId: 'DF1BCEA6-C202-477E-A3CF-2054D93E5F2A',
+        name: 'arrow-vertical-lock',
+        codepoint: 'F115C',
+        aliases: ['scroll-vertical-lock'],
+        styles: [],
+        version: '4.4.95',
+        deprecated: false,
+        tags: ['Lock', 'Arrow'],
+        author: 'Michael Irigoyen',
+      },
+      {
+        id: '11D80B18-006C-4929-8CEA-29D2C8BED5B7',
+        baseIconId: '11D80B18-006C-4929-8CEA-29D2C8BED5B7',
+        name: 'artboard',
+        codepoint: 'F1B9A',
+        aliases: ['canvas', 'frame'],
+        styles: [],
+        version: '7.0.96',
+        deprecated: false,
+        tags: ['Drawing / Art'],
+        author: 'Sintija',
+      },
+      {
+        id: '548CCDA7-0E99-4568-9997-2ECFD33392BB',
+        baseIconId: '548CCDA7-0E99-4568-9997-2ECFD33392BB',
+        name: 'artstation',
+        codepoint: 'F0B5B',
+        aliases: [],
+        styles: [],
+        version: '3.0.39',
+        deprecated: true,
+        tags: ['Brand / Logo'],
+        author: 'Contributors',
+      },
+      {
+        id: 'AE294E7D-3AC0-4C7D-AFAF-8DDA0AB5BF52',
+        baseIconId: 'AE294E7D-3AC0-4C7D-AFAF-8DDA0AB5BF52',
+        name: 'aspect-ratio',
+        codepoint: 'F0A24',
+        aliases: [],
+        styles: [],
+        version: '2.6.95',
+        deprecated: false,
+        tags: [],
+        author: 'Google',
+      },
+      {
+        id: '0C612FE5-D7CC-44F3-945A-4BD15A7E39BA',
+        baseIconId: '0C612FE5-D7CC-44F3-945A-4BD15A7E39BA',
+        name: 'assistant',
+        codepoint: 'F0064',
+        aliases: [],
+        styles: [],
+        version: '1.5.54',
+        deprecated: false,
+        tags: [],
+        author: 'Google',
+      },
+      {
+        id: 'E8C373FE-4258-4341-B52A-E33D9A484968',
+        baseIconId: 'E8C373FE-4258-4341-B52A-E33D9A484968',
+        name: 'asterisk',
+        codepoint: 'F06C4',
+        aliases: ['required'],
+        styles: [],
+        version: '1.8.36',
+        deprecated: false,
+        tags: [],
+        author: 'Michael Irigoyen',
+      },
+      {
+        id: '1A9A6BE7-2B58-458C-9DA5-3CCA65D67414',
+        baseIconId: 'E8C373FE-4258-4341-B52A-E33D9A484968',
+        name: 'asterisk-circle-outline',
+        codepoint: 'F1A27',
+        aliases: ['required-circle'],
+        styles: ['circle', 'outline'],
+        version: '6.6.96',
+        deprecated: false,
+        tags: [],
+        author: 'mocking-mike',
+      },
+      {
+        id: '9FC24609-9C8B-4DBA-A473-F5EFAFCC90DF',
+        baseIconId: '9FC24609-9C8B-4DBA-A473-F5EFAFCC90DF',
+        name: 'at',
+        codepoint: 'F0065',
+        aliases: ['alternate-email'],
+        styles: [],
+        version: '1.5.54',
+        deprecated: false,
+        tags: [],
+        author: 'Google',
+      },
+      {
+        id: '18963ABD-E908-4E3C-B8DA-D87916F269F7',
+        baseIconId: 'E76EC23F-AB71-49B3-9173-841544527A20',
+        name: 'account-cowboy-hat',
+        codepoint: 'F0E9B',
+        aliases: ['rancher'],
+        styles: ['variant'],
+        version: '3.7.94',
+        deprecated: false,
+        tags: ['Account / User', 'Agriculture'],
+        author: 'Augustin Ursu',
+      },
+      {
+        id: 'E1C851E1-3BBD-4661-A6FA-C77AD370DC6A',
+        baseIconId: 'E76EC23F-AB71-49B3-9173-841544527A20',
+        name: 'account-cowboy-hat-outline',
+        codepoint: 'F17F3',
+        aliases: ['rancher-outline'],
+        styles: ['outline', 'variant'],
+        version: '6.1.95',
+        deprecated: false,
+        tags: ['Account / User', 'Agriculture'],
+        author: 'Jeff Anders',
+      },
+      {
+        id: '1D459B7E-A98C-4E02-929B-FA0BA329B97F',
+        baseIconId: '1D459B7E-A98C-4E02-929B-FA0BA329B97F',
+        name: 'cow',
+        codepoint: 'F019A',
+        aliases: ['emoji-cow', 'emoticon-cow'],
+        styles: [],
+        version: '1.5.54',
+        deprecated: false,
+        tags: ['Animal', 'Agriculture'],
+        author: 'Austin Andrews',
+      },
+      {
+        id: '8FA2AEE7-EBCA-4943-AF59-FF3C4D762C53',
+        baseIconId: '1D459B7E-A98C-4E02-929B-FA0BA329B97F',
+        name: 'cow-off',
+        codepoint: 'F18FC',
+        aliases: ['dairy-off', 'dairy-free'],
+        styles: ['off'],
+        version: '6.4.95',
+        deprecated: false,
+        tags: ['Food / Drink', 'Agriculture', 'Animal'],
+        author: 'Michael Irigoyen',
+      },
+    ]
+
+    const searchEngine = new SearchEngine({
+      ...language,
+      stopwords: [],
+    })
+
+    data.forEach((item) => {
+      searchEngine.addDocument(
+        `${item.name} ${item.aliases.join(' ')} ${item.tags.join(' ')}  ${item.styles.join(' ')} ${item.author}`,
+        {
+          index_title: item.name,
+          id: item.id,
+        },
+      )
+    })
+
+    const scores = searchEngine.search('at')
+
+    console.log('scores at', scores)
+    expect(scores.length).toBe(6)
+
+    const scores2 = searchEngine.search('cow')
+
+    console.log('scores2 cow', scores2)
+
+    const scores3 = searchEngine.search('cowboys')
+
+    console.log('scores cowboys', scores3)
+
+    const scores4 = searchEngine.search('boy')
+
+    console.log('scores boy', scores4, 'tokenized', searchEngine.processText('boy'))
+    //expect(scores.length).toBe(1)
   })
 })
