@@ -181,19 +181,19 @@ describe('SearchEngine ja', () => {
     expect(result[0]).toEqual({
       id: doc1Id,
       score: 1,
-      primary_score_reason: 'exact',
+      match: 'exact',
       metadata: { a: 1 },
     })
     expect(result[1]).toEqual({
       id: doc2Id,
       score: 1,
-      primary_score_reason: 'exact',
+      match: 'exact',
       metadata: { b: 2 },
     })
     expect(result[2]).toEqual({
       id: doc3Id,
       score: 1,
-      primary_score_reason: 'exact',
+      match: 'exact',
       metadata: { c: 3 },
     })
   })
@@ -215,11 +215,11 @@ describe('SearchEngine ja', () => {
     expect(result[0]).toEqual({
       id: doc2Id,
       score: 1,
-      primary_score_reason: 'exact',
+      match: 'exact',
       metadata: { b: 2 },
     })
-    expect(result[1]).toEqual({ id: doc1Id, score: 0, primary_score_reason: 'exact', metadata: { a: 1 } })
-    expect(result[2]).toEqual({ id: doc3Id, score: 0, primary_score_reason: 'exact', metadata: { c: 3 } })
+    expect(result[1]).toEqual({ id: doc1Id, score: 0, match: 'exact', metadata: { a: 1 } })
+    expect(result[2]).toEqual({ id: doc3Id, score: 0, match: 'exact', metadata: { c: 3 } })
   })
 
   test('should remove a document correctly', () => {

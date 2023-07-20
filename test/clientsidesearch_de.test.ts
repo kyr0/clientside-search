@@ -60,16 +60,16 @@ describe('SearchEngine de', () => {
     expect(result[0]).toEqual({
       id: doc2Id,
       score: 1,
-      primary_score_reason: 'exact',
+      match: 'exact',
       metadata: { doc2: true },
     })
     expect(result[1]).toEqual({
       id: doc3Id,
       score: 1,
-      primary_score_reason: 'exact',
+      match: 'exact',
       metadata: { doc3: true },
     })
-    expect(result[2]).toEqual({ id: doc1Id, score: 0, primary_score_reason: 'partial', metadata: { doc1: true } })
+    expect(result[2]).toEqual({ id: doc1Id, score: 0, match: 'partial', metadata: { doc1: true } })
   })
 
   test('should remove a document correctly', () => {
@@ -160,6 +160,7 @@ describe('SearchEngine de', () => {
         stopwords: [],
         stem: (word: string) => word,
       },
+      'distance',
       [1, 1],
     )
     searchEngine.addDocument('Test Dokument', { index_title: 'Test Titel' })

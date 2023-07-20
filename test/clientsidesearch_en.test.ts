@@ -44,7 +44,7 @@ describe('SearchEngine en', () => {
     expect(result.length).toBeGreaterThanOrEqual(1)
     expect(result[0]).toEqual({
       id: searchEngine.generateId(doc1),
-      primary_score_reason: 'exact',
+      match: 'exact',
       score: 1,
       metadata: {},
     })
@@ -127,6 +127,7 @@ describe('SearchEngine en', () => {
         stopwords: [],
         stem: (word: string) => word,
       },
+      'distance',
       [1, 1],
     )
     searchEngine.addDocument('test document', { index_title: 'test title' })
@@ -140,7 +141,7 @@ describe('SearchEngine en', () => {
   })
 
   test('should properly search and match technical text, such as @, $ etc. symbols', () => {
-    const searchEngine = new SearchEngine(language, [1, 1])
+    const searchEngine = new SearchEngine(language, 'distance', [1, 1])
     searchEngine.addDocument('test document: $foo = 123;', { id: 'test' })
     searchEngine.addDocument('another test foo document @free', { id: 'test2' })
 
@@ -448,5 +449,106 @@ describe('SearchEngine en', () => {
     expect(scores4.length).toBe(9)
     expect(scores4[0].metadata.index_title).toBe('account-cowboy-hat-outline')
     expect(scores4[1].metadata.index_title).toBe('account-cowboy-hat')
+  })
+
+  test('huge list of icons to index, hydration', async () => {
+    console.time('indexing position')
+    const data = JSON.parse(readFileSync('./test/meta.json', 'utf8'))
+
+    const searchEngine = new SearchEngine(
+      {
+        ...language,
+        stopwords: [],
+      },
+      'position',
+    )
+
+    data.forEach((item) => {
+      searchEngine.addDocument(
+        `${item.name} ${item.aliases.join(' ')} ${item.tags.join(' ')}  ${item.styles.join(' ')}`,
+        {
+          index_title: item.name,
+          id: item.id,
+        },
+      )
+    })
+
+    console.timeEnd('indexing position')
+
+    const scores = searchEngine.search('at')
+
+    expect(scores.length).toBe(10)
+    expect(scores[0].metadata.index_title).toBe('at')
+
+    const scores2 = searchEngine.search('cow')
+    expect(searchEngine.processText('account-cowboy-hat-outline')).toEqual([
+      'account',
+      'cowboy',
+      'hat',
+      'outlin',
+      'account-cowboy-hat-outlin',
+    ])
+    expect(scores2.length).toBe(4)
+    expect(scores2[0].metadata.index_title).toBe('cow')
+    expect(scores2[1].metadata.index_title).toBe('cow-off')
+    expect(scores2[2].metadata.index_title).toBe('account-cowboy-hat-outline')
+    expect(scores2[3].metadata.index_title).toBe('account-cowboy-hat')
+
+    const scores3 = searchEngine.search('cowboys')
+    expect(scores3.length).toBe(2)
+    expect(scores3[0].metadata.index_title).toBe('account-cowboy-hat')
+    expect(scores3[1].metadata.index_title).toBe('account-cowboy-hat-outline')
+
+    const scores4 = searchEngine.search('boy')
+    expect(scores4.length).toBe(5)
+    expect(scores4[0].metadata.index_title).toBe('nintendo-game-boy')
+    expect(scores4[1].metadata.index_title).toBe('human-male-boy')
+    expect(scores4[2].metadata.index_title).toBe('human-female-boy')
+    expect(scores4[3].metadata.index_title).toBe('account-cowboy-hat-outline')
+    expect(scores4[4].metadata.index_title).toBe('account-cowboy-hat')
+
+    const hydratedState = searchEngine.hydrateState()
+    const hydratedEngine = SearchEngine.fromHydratedState(hydratedState, {
+      ...language,
+      stopwords: [],
+    })
+
+    expect(JSON.parse(hydratedState).iso2Language).toEqual(language.iso2Language)
+
+    const size = await gzipSize(hydratedState).catch(() => 0)
+    console.log('INDEX SIZE', prettyBytes(hydratedState.length))
+    console.log('INDEX SIZE', prettyBytes(size), '(gzip)')
+
+    const scoresH = hydratedEngine.search('at')
+
+    expect(scoresH.length).toBe(10)
+    expect(scoresH[0].metadata.index_title).toBe('at')
+
+    const scores2H = hydratedEngine.search('cow')
+    expect(hydratedEngine.processText('account-cowboy-hat-outline')).toEqual([
+      'account',
+      'cowboy',
+      'hat',
+      'outlin',
+      'account-cowboy-hat-outlin',
+    ])
+    expect(scores2H.length).toBe(4)
+    expect(scores2H[0].metadata.index_title).toBe('cow')
+    expect(scores2H[1].metadata.index_title).toBe('cow-off')
+    expect(scores2H[2].metadata.index_title).toBe('account-cowboy-hat')
+    expect(scores2H[3].metadata.index_title).toBe('account-cowboy-hat-outline')
+
+    const scores3H = hydratedEngine.search('cowboys')
+    expect(scores3H.length).toBe(2)
+    expect(scores3H[0].metadata.index_title).toBe('account-cowboy-hat')
+    expect(scores3H[1].metadata.index_title).toBe('account-cowboy-hat-outline')
+
+    const scores4H = hydratedEngine.search('boy')
+    expect(scores4H.length).toBe(5)
+    expect(scores4H[0].metadata.index_title).toBe('nintendo-game-boy')
+    expect(scores4H[1].metadata.index_title).toBe('human-male-boy')
+    expect(scores4H[2].metadata.index_title).toBe('human-female-boy')
+    expect(scores4H[3].metadata.index_title).toBe('account-cowboy-hat')
+    expect(scores4H[4].metadata.index_title).toBe('account-cowboy-hat-outline')
   })
 })

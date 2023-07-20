@@ -135,6 +135,7 @@ describe('SearchEngine es', () => {
         stopwords: [],
         stem: (word: string) => word,
       },
+      'distance',
       [1, 1],
     )
     searchEngine.addDocument('Este es un documento de prueba. Prueba de búsqueda.')

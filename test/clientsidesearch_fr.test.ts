@@ -140,6 +140,7 @@ describe('SearchEngine fr', () => {
         stopwords: [],
         stem: (word: string) => word,
       },
+      'distance',
       [1, 1],
     )
     searchEngine.addDocument('Document de Test', { index_title: 'Titre de Test' })
