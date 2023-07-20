@@ -508,10 +508,13 @@ describe('SearchEngine en', () => {
     expect(scores4[4].metadata.index_title).toBe('account-cowboy-hat')
 
     const hydratedState = searchEngine.hydrateState()
+
+    console.time('rehydrate position')
     const hydratedEngine = SearchEngine.fromHydratedState(hydratedState, {
       ...language,
       stopwords: [],
     })
+    console.timeEnd('rehydrate position')
 
     expect(JSON.parse(hydratedState).iso2Language).toEqual(language.iso2Language)
 
