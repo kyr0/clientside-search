@@ -56,7 +56,7 @@ This search engine uses several advanced algorithms to provide robust and effici
 
 ```ts
 import { SearchEngine } from 'clientside-search'
-import en from 'clientside-search/en.esm'
+import en from 'clientside-search/en'
 
 // create a new instance of a search engine
 const searchEngine = new SearchEngine(en)
@@ -101,7 +101,7 @@ const searchResultFromHydated = hydratedEngine.search('Fence')
 
 ```ts
 const { SearchEngine } = require('clientside-search')
-const { en } = require('clientside-search/en.cjs')
+const { en } = require('clientside-search/en')
 
 // same API like ESM variant
 ```
