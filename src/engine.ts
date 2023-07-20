@@ -2,6 +2,7 @@ import { BKTree } from './bktree'
 import { BM25 } from './bm25'
 import { getPhoneticWeight } from './phonetic/phonetic'
 import { TfidfVectorizer } from './tfidf'
+import { Trie } from './trie'
 
 export interface Document {
   id: string
@@ -37,12 +38,16 @@ export interface SimilarWord {
   distance: number
 }
 
+export type Strategy = 'distance' | 'position'
+
 export class SearchEngine {
+  strategy: Strategy
   index: Record<string, Record<string, number>>
   docToWords: Record<string, string[]>
   documents: Record<string, string>
   vectorizer: TfidfVectorizer
   bkTree: BKTree
+  trie: Trie
   stopWords: Set<string>
   bm25: BM25
   docMetadata: Record<string, any>
@@ -53,7 +58,7 @@ export class SearchEngine {
   stemmedMetadata: Record<number, { [metadataKey: string]: Array<string> }>
   ngramRange: [number, number]
 
-  constructor(language: LanguageSupport, ngramRange: [number, number] = [1, 1]) {
+  constructor(language: LanguageSupport, strategy: Strategy = 'distance', ngramRange: [number, number] = [1, 1]) {
     this.index = {}
     this.docToWords = {}
     this.documents = {}
@@ -68,14 +73,16 @@ export class SearchEngine {
     this.stemCache = new Map()
     this.stemmedDocuments = []
     this.stemmedMetadata = {}
+    this.strategy = strategy
+    this.trie = new Trie()
   }
 
-  static fromHydratedState(compressedJSON: any, language: LanguageSupport) {
+  static fromHydratedState(compressedJSON: string, language: LanguageSupport) {
     const jsonData = JSON.parse(compressedJSON)
     if (jsonData.iso2Language !== language.iso2Language) {
       throw new Error(`Language mismatch: expected ${language.iso2Language} but got ${jsonData.iso2Language} from JSON`)
     }
-    const searchEngine = new SearchEngine(language, jsonData.ngramRange)
+    const searchEngine = new SearchEngine(language, jsonData.strategy, jsonData.ngramRange)
     searchEngine.stemmedDocuments = jsonData.stemmedDocuments
     searchEngine.stemmedMetadata = jsonData.stemmedMetadata
 
@@ -92,6 +99,7 @@ export class SearchEngine {
       ngramRange: this.ngramRange,
       iso2Language: this.language.iso2Language,
       stemmedMetadata: this.stemmedMetadata,
+      strategy: this.strategy,
     })
   }
 
@@ -145,26 +153,36 @@ export class SearchEngine {
     }
     return words
   }
-
   addDocumentStemmed(words: string[], docId: number, metadata: any = {}) {
+    const { strategy } = this
+
     this.bm25.addDocument(words, docId)
-    this.vectorizer.addDocument(docId, words)
+
+    if (strategy === 'distance') {
+      this.vectorizer.addDocument(docId, words)
+    }
 
     const wordsSet = new Set(words)
-    const tfidfCache = {}
+    const tfidfCache = strategy === 'distance' ? {} : Object.create(null)
 
-    wordsSet.forEach((word) => {
+    for (const word of wordsSet) {
       if (!this.index[word]) {
         this.index[word] = {}
       }
 
-      if (!tfidfCache[word]) {
-        tfidfCache[word] = this.vectorizer.tfidf(word, docId)
+      if (strategy === 'distance') {
+        if (!tfidfCache[word]) {
+          tfidfCache[word] = this.vectorizer.tfidf(word, docId)
+        }
+        this.index[word][docId] = tfidfCache[word]
+        this.bkTree.insert(word)
+      } else {
+        if (!this.index[word][docId]) {
+          this.index[word][docId] = 0
+          this.trie.insert(word)
+        }
       }
-
-      this.index[word][docId] = tfidfCache[word]
-      this.bkTree.insert(word)
-    })
+    }
 
     this.docToWords[docId] = Array.from(wordsSet)
     this.docMetadata[docId] = metadata
@@ -194,6 +212,7 @@ export class SearchEngine {
 
     return this.addDocumentStemmed(words, docId, metadata)
   }
+
   search(query: string, topN: number = 10) {
     const terms = this.processText(query)
     const exactScores: Record<string, number> = {}
@@ -276,7 +295,7 @@ export class SearchEngine {
     return docIds.map((docId) => ({
       id: parseInt(docId, 10),
       metadata: this.docMetadata[docId],
-      primary_score_reason: scoreReason[docId],
+      match: scoreReason[docId],
       score: scores[docId],
     }))
   }
@@ -288,11 +307,15 @@ export class SearchEngine {
       maxDistance = maxDistance - word.length
     }
 
-    const similarWords = this.bkTree.search(word, maxDistance)
-    const similarPartials = this.bkTree.searchPartial(word, maxDistance)
+    if (this.strategy === 'distance') {
+      const similarWords = this.bkTree.search(word, maxDistance)
+      const similarPartials = this.bkTree.searchPartial(word, maxDistance)
 
-    // sort the similar words by their distance and map to an array of words
-    return [...similarWords, ...similarPartials].sort((a, b) => a.distance - b.distance)
+      // sort the similar words by their distance and map to an array of words
+      return [...similarWords, ...similarPartials].sort((a, b) => a.distance - b.distance)
+    } else {
+      return this.trie.search(word).map((word) => ({ word, distance: 0 }))
+    }
   }
 
   // a variation of Daniel J. Bernstein string hash function (djb2)
@@ -316,12 +339,13 @@ export class SearchEngine {
           delete this.index[word]
           // remove the word from the BK-Tree
           // please note that this operation can be costly
-          this.bkTree.remove(word)
+
+          this.strategy === 'distance' ? this.bkTree.remove(word) : this.trie.delete(word)
         }
       }
     }
 
-    this.vectorizer.removeDocument(docId)
+    this.strategy === 'distance' && this.vectorizer.removeDocument(docId)
 
     delete this.documents[docId]
   }
