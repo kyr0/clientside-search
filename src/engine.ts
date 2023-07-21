@@ -212,8 +212,7 @@ export class SearchEngine {
 
     return this.addDocumentStemmed(words, docId, metadata)
   }
-
-  search(query: string, topN: number = 10) {
+  search(query: string, topN?: number) {
     const terms = this.processText(query)
     const exactScores: Record<string, number> = {}
     const fuzzyScores: Record<string, number> = {}
@@ -252,10 +251,6 @@ export class SearchEngine {
             }
           }
         })
-
-        if (seenDocIds.size >= topN) {
-          return true
-        }
       })
       return false
     })
@@ -288,9 +283,12 @@ export class SearchEngine {
       return acc
     }, {})
 
-    const docIds = Object.keys(scores)
-      .sort((a, b) => scores[b] - scores[a])
-      .slice(0, topN)
+    let docIds = Object.keys(scores).sort((a, b) => scores[b] - scores[a])
+
+    // Apply the topN restriction only when it's defined
+    if (topN !== undefined) {
+      docIds = docIds.slice(0, topN)
+    }
 
     return docIds.map((docId) => ({
       id: parseInt(docId, 10),

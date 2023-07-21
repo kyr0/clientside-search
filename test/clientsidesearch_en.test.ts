@@ -477,7 +477,7 @@ describe('SearchEngine en', () => {
 
     const scores = searchEngine.search('at')
 
-    expect(scores.length).toBe(10)
+    expect(scores.length).toBe(577)
     expect(scores[0].metadata.index_title).toBe('at')
 
     const scores2 = searchEngine.search('cow')
@@ -524,7 +524,7 @@ describe('SearchEngine en', () => {
 
     const scoresH = hydratedEngine.search('at')
 
-    expect(scoresH.length).toBe(10)
+    expect(scoresH.length).toBe(577)
     expect(scoresH[0].metadata.index_title).toBe('at')
 
     const scores2H = hydratedEngine.search('cow')
@@ -553,5 +553,11 @@ describe('SearchEngine en', () => {
     expect(scores4H[2].metadata.index_title).toBe('human-female-boy')
     expect(scores4H[3].metadata.index_title).toBe('account-cowboy-hat')
     expect(scores4H[4].metadata.index_title).toBe('account-cowboy-hat-outline')
+
+    const scoresAll = hydratedEngine.search('account')
+    expect(scoresAll.length).toBe(186)
+
+    const scores20 = hydratedEngine.search('account', 20)
+    expect(scores20.length).toBe(20)
   })
 })
