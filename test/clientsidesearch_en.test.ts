@@ -477,7 +477,7 @@ describe('SearchEngine en', () => {
 
     const scores = searchEngine.search('at')
 
-    expect(scores.length).toBe(577)
+    expect(scores.length).toBe(27)
     expect(scores[0].metadata.index_title).toBe('at')
 
     const scores2 = searchEngine.search('cow')
@@ -489,8 +489,8 @@ describe('SearchEngine en', () => {
       'account-cowboy-hat-outlin',
     ])
     expect(scores2.length).toBe(4)
-    expect(scores2[0].metadata.index_title).toBe('cow')
-    expect(scores2[1].metadata.index_title).toBe('cow-off')
+    expect(scores2[0].metadata.index_title).toBe('cow-off')
+    expect(scores2[1].metadata.index_title).toBe('cow')
     expect(scores2[2].metadata.index_title).toBe('account-cowboy-hat-outline')
     expect(scores2[3].metadata.index_title).toBe('account-cowboy-hat')
 
@@ -500,7 +500,7 @@ describe('SearchEngine en', () => {
     expect(scores3[1].metadata.index_title).toBe('account-cowboy-hat-outline')
 
     const scores4 = searchEngine.search('boy')
-    expect(scores4.length).toBe(5)
+    expect(scores4.length).toBe(3)
     expect(scores4[0].metadata.index_title).toBe('nintendo-game-boy')
     expect(scores4[1].metadata.index_title).toBe('human-male-boy')
     expect(scores4[2].metadata.index_title).toBe('human-female-boy')

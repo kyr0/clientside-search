@@ -1129,6 +1129,15 @@ combined-stream@^1.0.8:
   dependencies:
     delayed-stream "~1.0.0"
 
+compromise@^14.9.0:
+  version "14.9.0"
+  resolved "https://registry.yarnpkg.com/compromise/-/compromise-14.9.0.tgz#b2a44db68b3519e837376c71c49aac6cab4bcee8"
+  integrity sha512-sQXVgbZkSIB3JWMFH4GUfAiiEWH8LIy7hoT9U+MB5E0EP22ayWuNRDrxyt+kUdzaQU19KOaCkTTRPzHCYeDylQ==
+  dependencies:
+    efrt "2.7.0"
+    grad-school "0.0.5"
+    suffix-thumb "5.0.2"
+
 concat-map@0.0.1:
   version "0.0.1"
   resolved "https://registry.npmjs.org/concat-map/-/concat-map-0.0.1.tgz"
@@ -1169,6 +1178,13 @@ cssstyle@^2.3.0:
   integrity sha512-AZL67abkUzIuvcHqk7c09cezpGNcxUxU4Ioi/05xHk4DQeTkWmGYftIE6ctU6AEt+Gn4n1lDStOtj7FKycP71A==
   dependencies:
     cssom "~0.3.6"
+
+csv-parser@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/csv-parser/-/csv-parser-3.0.0.tgz#b88a6256d79e090a97a1b56451f9327b01d710e7"
+  integrity sha512-s6OYSXAK3IdKqYO33y09jhypG/bSDHPuyCme/IdEHfWpLf/jKcpitVFyOC6UemgGk8v7Q5u2XE0vvwmanxhGlQ==
+  dependencies:
+    minimist "^1.2.0"
 
 data-urls@^3.0.2:
   version "3.0.2"
@@ -1240,6 +1256,11 @@ duplexer@^0.1.2:
   version "0.1.2"
   resolved "https://registry.npmjs.org/duplexer/-/duplexer-0.1.2.tgz"
   integrity sha512-jtD6YG370ZCIi/9GTaJKQxWTZD045+4R4hTk/x1UyoqadyJ9x9CgSi1RlVDQF8U2sxLLSnFkCaMihqljHIWgMg==
+
+efrt@2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/efrt/-/efrt-2.7.0.tgz#8b021e69f75cfeed3f81ee058aa0c78265793324"
+  integrity sha512-/RInbCy1d4P6Zdfa+TMVsf/ufZVotat5hCw3QXmWtjU+3pFEOvOQ7ibo3aIxyCJw2leIeAMjmPj+1SLJiCpdrQ==
 
 electron-to-chromium@^1.4.284:
   version "1.4.287"
@@ -1486,6 +1507,11 @@ graceful-fs@^4.2.9:
   version "4.2.10"
   resolved "https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.2.10.tgz"
   integrity sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==
+
+grad-school@0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/grad-school/-/grad-school-0.0.5.tgz#9e7b2084f3e137965c19b63ef0dfe49867194f43"
+  integrity sha512-rXunEHF9M9EkMydTBux7+IryYXEZinRk6g8OBOGDBzo/qWJjhTxy86i5q7lQYpCLHN8Sqv1XX3OIOc7ka2gtvQ==
 
 gzip-size@^7.0.0:
   version "7.0.0"
@@ -2219,6 +2245,11 @@ minimatch@^3.0.4, minimatch@^3.1.1:
   dependencies:
     brace-expansion "^1.1.7"
 
+minimist@^1.2.0:
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.8.tgz#c1a464e7693302e082a075cee0c057741ac4772c"
+  integrity sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==
+
 ms@2.1.2:
   version "2.1.2"
   resolved "https://registry.npmjs.org/ms/-/ms-2.1.2.tgz"
@@ -2588,6 +2619,11 @@ strip-json-comments@^3.1.1:
   version "3.1.1"
   resolved "https://registry.npmjs.org/strip-json-comments/-/strip-json-comments-3.1.1.tgz"
   integrity sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==
+
+suffix-thumb@5.0.2:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/suffix-thumb/-/suffix-thumb-5.0.2.tgz#b38940faddb3ae8b5fd281c7ec5830c25a6b2c9c"
+  integrity sha512-I5PWXAFKx3FYnI9a+dQMWNqTxoRt6vdBdb0O+BJ1sxXCWtSoQCusc13E58f+9p4MYx/qCnEMkD5jac6K2j3dgA==
 
 supports-color@^5.3.0:
   version "5.5.0"

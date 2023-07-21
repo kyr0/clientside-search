@@ -11,11 +11,12 @@ export interface Document {
 
 export interface LanguageSupport {
   iso2Language: Iso2LanguageKey
-  stem: (word: string) => string
-  stopwords: Array<string>
-  diacritics: Array<string>
-  tokenizer: (text: string) => Array<string>
+  stem?: (word: string) => string
+  stopwords?: Array<string>
+  diacritics?: Array<string>
+  tokenizer: (text: string, language: LanguageSupport) => Array<string>
   isLogograhic?: boolean
+  lexiconCompoundWords?: Array<string>
 }
 
 export type Iso2LanguageKey = string
@@ -122,7 +123,7 @@ export class SearchEngine {
 
   processText(text: string): Array<string> {
     const words = []
-    const rawWords = this.language.tokenizer(text)
+    const rawWords = this.language.tokenizer(text, this.language)
 
     // Japanese and Chinese don't have stopwords
     // nor does the typical character-based approach work for them

@@ -17,7 +17,7 @@ export class Trie {
 
   insert(word: string) {
     this.insertSubstring(this.root, word)
-    this.insertSubstring(this.root, word.split('').reverse().join(''))
+    //this.insertSubstring(this.root, word.split('').reverse().join(''))
   }
 
   private insertSubstring(root: TrieNode, substring: string) {
@@ -34,7 +34,7 @@ export class Trie {
   search(word: string): string[] {
     return [
       ...this.searchFromRoot(this.root, word),
-      ...this.searchFromRoot(this.root, word.split('').reverse().join('')).map((w) => w.split('').reverse().join('')),
+      //...this.searchFromRoot(this.root, word.split('').reverse().join('')).map((w) => w.split('').reverse().join('')),
     ]
   }
 

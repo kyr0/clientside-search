@@ -25,7 +25,7 @@ describe('Language Detection', () => {
     const stopwordsSets = {
       custom: new Set(['fubar', 'snafu']),
     }
-    const language = detectLanguage(text, stopwordsSets)
+    const language = detectLanguage(text, stopwordsSets as any)
     expect(language).toBe('custom')
   })
 
@@ -40,7 +40,7 @@ describe('Language Detection', () => {
     const stopwordSets = {
       fr: new Set(['déjà', 'vu']),
     }
-    const language = detectLanguage(text, stopwordSets)
+    const language = detectLanguage(text, stopwordSets as any)
     expect(language).toBe('fr')
   })
 
@@ -61,7 +61,7 @@ describe('Language Detection', () => {
     const stopwordsSets = {
       fr: new Set(['le', 'la', 'les', 'je', 'tu']),
     }
-    const language = detectLanguage(text, stopwordsSets)
+    const language = detectLanguage(text, stopwordsSets as any)
     expect(language).toBe('fr')
   })
 
